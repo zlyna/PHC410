@@ -1,0 +1,137 @@
+
+#set working directory
+#setwd("~/Dropbox/Workspace-DBX/TB-IKU")
+
+#load library
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(skimr)
+library(lubridate)
+library(writexl)
+
+#read dataset into dataframe
+tbi_2013 <- read_excel("input/raw_data/TBIS101A_2013.xlsx")
+tbi_2014 <- read_excel("input/raw_data/TBIS101A_2014.xlsx",sheet = "TBIS 101A")
+tbi_2015 <- read_excel("input/raw_data/TBIS101A_2015.xlsx",sheet = "TBIS 101A")
+tbi_2016 <- read_excel("input/raw_data/TBIS101A_2016.xlsx")
+tbi_2017 <- read_excel("input/raw_data/TBIS101A_2017.xlsx")
+tbi_2018 <- read_excel("input/raw_data/TBIS101A_2018.xls")
+tbc_2013 <- read_excel("input/raw_data/TBIS101C_2013.xlsx")
+tbc_2014 <- read_excel("input/raw_data/TBIS101C_2014.xlsx")
+tbc_2015 <- read_excel("input/raw_data/TBIS101C_2015.xlsx")
+tbc_2016 <- read_excel("input/raw_data/TBIS101C_2016.xlsx")
+tbc_2017 <- read_excel("input/raw_data/TBIS101C_2017.xlsx")
+#just added 18/06/19 - TB Contact 2018
+tbc_2018 <- read_excel("input/raw_data/TBIS101C_2018.xlsx")
+
+# <------------------ TB CONTACT ------------------>
+
+#solving issues incompatible columns in tbc_2013 (compared to 2014-2017)
+
+#1) combine tbc 2014 - 2017
+tb_contact1 <- rbind(tbc_2014,tbc_2015,tbc_2016,tbc_2017,tbc_2018)
+
+#2) check incompatible columns
+#setdiff(names(tbc_2013),names(tb_contact1))
+#ID in tbc_2013 needs to be changed to "ID Pesakit"
+colnames(tbc_2013)[colnames(tbc_2013) == "ID"] <- "ID Pesakit"
+
+#3) check incompatible columns vice versa
+#setdiff(names(tb_contact1),names(tbc_2013))
+#drop 28 incompatible columns
+tb_contact1 <- tb_contact1 %>% select(-c(`ID Daftar Kes`,`ID TBIS 10A-1`,`ID TBIS 10A-3`,`ID TBIS 10A-4`,`ID TBIS 10C-3`,`Minggu Epid (Tarikh Diagnosa)`,`Bulan Epid (Tarikh Diagnosa)`,`Tahun Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`,`Bulan Epid (Tarikh Notifikasi)`,`Tahun Epid (Tarikh Notifikasi)`,`Minggu Epid (Tarikh Daftar Kes)`,`Bulan Epid (Tarikh Daftar Kes)`,`Tahun Epid (Tarikh Daftar Kes)`,`(Recode) Lokasi Anatomi Tibi (Diagnosa)`,`(Recode) Kategori Kes Tibi`,`Minggu Epid (Tarikh Pemeriksaan Pertama)`,`Bulan Epid (Tarikh Pemeriksaan Pertama)`,`Tahun Epid (Tarikh Pemeriksaan Pertama)`,`Minggu Epid (Tarikh Pemeriksaan Kedua)`,`Bulan Epid (Tarikh Pemeriksaan Kedua)`,`Tahun Epid (Tarikh Pemeriksaan Kedua)`,`Minggu Epid (Tarikh Pemeriksaan Ketiga)`,`Bulan Epid (Tarikh Pemeriksaan Ketiga)`,`Tahun Epid (Tarikh Pemeriksaan Ketiga)`,`Minggu Epid (Tarikh Pemeriksaan Keempat)`,`Bulan Epid (Tarikh Pemeriksaan Keempat)`,`Tahun Epid (Tarikh Pemeriksaan Keempat)`)) 
+
+#4) combine TB contact 2013 with TB contact 2014, 2015, 2016, 2017
+tb_contact <- rbind(tbc_2013,tb_contact1)
+
+#5) drop additional columns based on meeting decision
+tb_contact <- tb_contact %>% select(-c(`No Daftar Tibi Daerah`,`Warganegara`,`Tarikh Diagnosa`, `Tarikh Notifikasi`,`Tarikh Daftar Kes`,`Negeri`,`Bahagian/Kawasan`,`Daerah`,`Sektor`,`Mukim`,`Lokaliti`,`Lokasi Tempat Tinggal Semasa`,`Status Kahak Awal Rawatan`,`Lokasi Anatomi Tibi (Diagnosa)`,`Kategori Kes Tibi`,`No Bimbit`,`Diinput Oleh`,`Tarikh Input`))
+
+#write to excel file to keep the cleaner version of combined TB contact
+write_xlsx(tb_contact,"input/clean_data/TB_contact.xlsx")
+
+#excel file  which keeps tb_contact for all years and all columns (none were dropped)
+write_csv(tb_contact,"input/clean_data/TB_contact-allcolumns.csv")
+# <------------------ TB INDEX ------------------>
+
+#combine TB index dataframe 
+tb_index <- rbind(tbi_2013,tbi_2014,tbi_2015,tbi_2016,tbi_2017,tbi_2018)
+
+#drop 46 columns from tb_index
+tb_indexv2 <- tb_index %>% select(`ID Pesakit`,`Tarikh Pendaftaran`,`Nama`,`No. Pengenalan Diri atau No. Dokumen Perjalanan`,`Tarikh Lahir`,`Umur (Tahun)`, `Jantina`, `Warganegara`, `Negara Asal`, `Tempoh (Tahun) tinggal di Malaysia`, `Tempoh (Bulan) tinggal di Malaysia`, `Keturunan`, `Sub Keturunan`, `Cara Pengesanan`, `Cara Pengesanan Aktif`, `Cara Pengesanan Saringan`, `Cara Pengesanan Saringan Khas`, `Negeri`, `Daerah`, `Lokaliti`, `Lokasi Tempat Tinggal Semasa`, `Status Pendidikan Pesakit`, `Bilangan Tanggungan`, `Status Pendapatan`, `Jumlah Pendapatan Keluarga`, `Diabetes Mellitus`, `Merokok`, `Tarikh Diagnosa`, `Tarikh Notifikasi`, `Tarikh Rawatan Dimulakan`, `Tarikh Akhir Rawatan`, `Parut BCG`, `Lokasi Anatomi Tibi (Diagnosa)`, `TB Meningitis`, `TB Miliary`,`Sub Diagnosis (eNotifikasi)`,`Pekerjaan Utama`,`Petugas Perubatan/Kesihatan`,`Anggota KKM`,`Institusi Tempat Bertugas`,`Bahagian Tempat Bertugas`,`Jawatan`,`Adakah pekerjaan berkaitan dengan lembu`,`Kategori Kes Tibi`,`Keputusan geneXpert`,`Kahak Awal Rawatan`,`Kahak Bulan ke-2`,`Kahak Bulan ke-3`,`Kahak Bulan ke-4`,`Kahak Bulan ke-5`,`Kahak Akhir Rawatan`,`Status Kultur Kahak Di Awal Rawatan`,`Status X-ray Dada Semasa Diagnosa`,`HIV Pra-Diagnosa`,`HIV Post-Diagnosa`,`Rawatan HAART`,`Tarikh Rawatan HAART`,`Rawatan CPT` ,`Tarikh Rawatan CPT`,`Status MDR-TB`,`Tarikh Spesimen MDR-TB`,`Tarikh MDR-TB`,`Hasil Rawatan`,`Penyumbang Gagal Rawatan, MDR-TB`,`Penyumbang Gagal Rawatan, Infeksi HIV`,`Penyumbang Gagal Rawatan, Regim suboptima`,`Penyumbang Gagal Rawatan, Tidak patuh jadual rawatan`,`Penyumbang Gagal Rawatan, Rawatan tidak diselia`,`Penyumbang Gagal Rawatan, Lain-lain`,`Penyumbang Gagal Rawatan, Lain-lain (Nyatakan)`,`Hasil Rawatan (Gagal Rawatan)`,`Pengesahan Pengamal Perubatan`,`Penyumbang kematian, Lewat Diagnosa`,`Penyumbang kematian, Kegagalan Multi-sistem`,`Penyumbang kematian, Salah pengendalian`,`Penyumbang kematian, Jangkitan Sekunder`,`Penyumbang kematian, Lain-lain`,`Penyumbang kematian, Lain-lain (Nyatakan)`,`DOT Fasa Intensif` ,`DOT Fasa Sambungan`,`Penyelia Utama Rawatan (DOT) Semasa Fasa Intensif`)
+
+#keep combined TB index with dropped columns in a csv file
+write_xlsx(tb_indexv2,"input/clean_data/TB_index.xlsx")
+
+
+
+#check missing values
+#skim(tb_index)
+
+
+#4 incompatible variables will be retrieved and added to  tbc_2013 and tbc_2014 based  on matching `Nama` in tbi_2013 and `Nama Kes Indeks` in tbc_2013.
+
+#1 - change 'Nombor Daftar Tibi Daerah' in TB Indeks into 'No Daftar Tibi Daerah' as both column names should be identical before it can be matched
+
+
+#select missing column from tbi_2013 & add to tbc_2013
+tbi_2013v2 <- tbi_2013 %>% select(`ID Daftar Kes`,`ID TBIS 10A-1`, `ID TBIS 10A-4`,`ID TBIS 10A-3`)
+tbc_2013v2 <- right_join(tbi_2013v2, tbc_2013, by="No Daftar Tibi Daerah")
+
+#keep it in a new file
+write_csv(tbc_2013v2,"TBC_2013v2.csv")
+
+#drop incompatible columns from tbc_2015
+tbc_2015v2 <- tbc_2015 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+
+
+#COMBINE tbc_2013v2 & tbc_2015v2
+#but couldnt since no bimbit in 2013 is in character - need to convert to numeric first
+#and new dataframe is saved as TBIC_20132015.csv
+tbc_2013v2 <- tbc_2013v2 %>% mutate(`No Bimbit` = as.numeric(`No Bimbit`))
+tbc_20132015 <- rbind(tbc_2013v2,tbc_2015v2)
+write_csv(tbc_20132015,"TBC_20132015.csv")
+
+#NEXT CLEAN TBC_2014, TBC_2016
+tbc_2014 <- read_excel("TBIS101C_2014.xlsx")
+tbc_2016 <- read_excel("TBIS101C_2016.xlsx")
+#drop incompatible columns from tbc_2015
+tbc_2014v2 <- tbc_2014 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+tbc_2016v2 <- tbc_2016 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+#combine rows
+tbc_20132014 <- bind_rows(tbc_20132015,tbc_2014v2)
+
+#next baru add no pengenalan diri into contact column once dah clear to match nama indeks
+
+#mapping example
+#dataframe[gender].map({"m":"male","fem.":"female",...})
+### as of 7 sept 2019
+tbi_2013 <- read_excel("input/raw_data/TBIS101A_2013.xlsx")
+tbc_2013 <- read_excel("input/raw_data/TBIS101C_2013.xlsx")
+tbc_2014 <- read_excel("input/raw_data/TBIS101C_2014.xlsx")
+tbc_2015 <- read_excel("input/raw_data/TBIS101C_2015.xlsx")
+tbc_2016 <- read_excel("input/raw_data/TBIS101C_2016.xlsx")
+tbc_2017 <- read_excel("input/raw_data/TBIS101C_2017.xlsx")
+tbc_2018 <- read_excel("input/raw_data/TBIS101C_2018.xlsx")
+tbc_20142018 <- rbind(tbc_2014,tbc_2015,tbc_2016,tbc_2017,tbc_2018)
+
+colnames(tbc_2013)[colnames(tbc_2013) == "ID"] <- "ID Kontak"
+colnames(tbc_20142018)[colnames(tbc_20142018) == "ID TBIS 10C-3"] <- "ID Kontak"
+colnames(tbi_2013)[colnames(tbi_2013) == "Nombor Daftar Tibi Daerah"] <- "No Daftar Tibi Daerah"
+
+#drop 28 incompatible columns
+tbc_20142018v2 <- tbc_20142018 %>% select(-c(`ID Pesakit`,`ID Daftar Kes`,`ID TBIS 10A-1`,`ID TBIS 10A-3`,`ID TBIS 10A-4`,`Minggu Epid (Tarikh Diagnosa)`,`Bulan Epid (Tarikh Diagnosa)`,`Tahun Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`,`Bulan Epid (Tarikh Notifikasi)`,`Tahun Epid (Tarikh Notifikasi)`,`Minggu Epid (Tarikh Daftar Kes)`,`Bulan Epid (Tarikh Daftar Kes)`,`Tahun Epid (Tarikh Daftar Kes)`,`(Recode) Lokasi Anatomi Tibi (Diagnosa)`,`(Recode) Kategori Kes Tibi`,`Minggu Epid (Tarikh Pemeriksaan Pertama)`,`Bulan Epid (Tarikh Pemeriksaan Pertama)`,`Tahun Epid (Tarikh Pemeriksaan Pertama)`,`Minggu Epid (Tarikh Pemeriksaan Kedua)`,`Bulan Epid (Tarikh Pemeriksaan Kedua)`,`Tahun Epid (Tarikh Pemeriksaan Kedua)`,`Minggu Epid (Tarikh Pemeriksaan Ketiga)`,`Bulan Epid (Tarikh Pemeriksaan Ketiga)`,`Tahun Epid (Tarikh Pemeriksaan Ketiga)`,`Minggu Epid (Tarikh Pemeriksaan Keempat)`,`Bulan Epid (Tarikh Pemeriksaan Keempat)`,`Tahun Epid (Tarikh Pemeriksaan Keempat)`)) 
+
+tbc_20132018 <- rbind(tbc_2013,tbc_20142018v2)
+write_csv(tbc_20132018,"input/clean_data/TB_contact2013-2018.csv")
+
+tb_verify <- read_excel("input/clean_data/TB-data-verification-200819.xlsx",sheet="Contact")
+contactNegeri <- tbc_20132018 %>% select(`ID Kontak`,"Negeri","Bahagian/Kawasan","Daerah","Sektor","Mukim","Lokaliti","Lokasi Tempat Tinggal Semasa")      
+tb_verifyN <- left_join(tb_verify,contactNegeri,by="ID Kontak")
+write_excel(tb_verifyN,"input/clean_data/verifyNegeri.xlsx")
+
+wb <- loadWorkbook("input/clean_data/TB-data-verification-200819.xlsx")
+addWorksheet(wb,"Contact(Negeri)")
+writeData(wb,"Contact(Negeri)",tb_verifyN)
+saveWorkbook(wb, file = "input/clean_data/TB-data-verification-200819.xlsx", overwrite = TRUE)

@@ -1,0 +1,5 @@
+"0","x <- c(13, 14, 15, 16, 16, 18)"
+"0","y <- c(8, 10, 15, 20, 27, 30)"
+"0","df1 <- data.frame(x1=x, x2=y)"
+"0","names(df1)=c(""Age"",""Vocabulary"")"
+"0","knitr::kable(df1,align=rep('c', 6), format = 'html')"

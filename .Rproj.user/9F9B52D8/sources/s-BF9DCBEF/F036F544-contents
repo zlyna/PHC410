@@ -1,0 +1,507 @@
+---
+title: "PHARMACEUTICAL BIOSTATISTICS (PHC410)"
+subtitle: "Correlation and Regression"
+author: "Dr Yuslina Zakaria"
+institute: "Faculty of Pharmacy, UiTM Selangor"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+bibliography: bib.bib
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(png)
+library(kableExtra)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(RefManageR)
+knitr::write_bib(x = "rmarkdown", file = "bib.bib")
+```
+background-image: url(figure/correlationimage.png)
+background-position: 60% 90%
+# Learning Outcomes
+
+At the end of this lesson, students should be able to:
+
+1. interpret **scatterplots**.
+
+1. differentiate between **correlation** and **regression**.
+
+1. evaluate and interpret the **Pearson’s** and **Spearman’s rank correlation coefficient**.
+
+1. formulate the **regression equations** and explain about the **variation of regression lines**.
+
+1. calculate and interpret **coefficient and determination**.
+
+---
+
+# Outlines
+
+- Bivariate Data & Analysis
+
+- Scatterplots
+
+- Correlation VS Regression
+
+- Simple Linear Correlation
+
+  - Pearson's Product Moment Correlation Coefficient, _r_
+  - Spearman's Rank Correlation Coefficient, _r<sub>s</sub>_
+  
+- Simple Linear Regression
+
+  - Residuals
+  - Basic Assumptions
+  - The Least Square Regression
+  - Coefficient of Determination, _R<sup>2</sup>_
+
+---
+
+# Bivariate Data
+
+- Two selected random variables recorded from each sampling unit
+  - Abundance of a _plant species_ and _soil pH_ from each of several sampled plots
+  - _Blood pressure_ and _body weight_ from patients
+
+- During correlation analysis, the relationship between two continuous variables is described.
+
+- Use that relationship as a basis for prediction.
+
+- Multivariate data – when more than two variables recorded from one sampling unit.
+
+---
+
+# Bivariate Data
+
+- Two selected random variables recorded from each sampling unit
+  - Abundance of a _plant species_ and _soil pH_ from each of several sampled plots
+  - _Blood pressure_ and _body weight_ from patients
+
+- During correlation analysis, the relationship between two continuous variables is described.
+
+- Use that relationship as a basis for prediction.
+
+- Multivariate data – when more than two variables recorded from one sampling unit.
+
+---
+class: inverse, center, middle
+
+# Scatterplots
+
+---
+
+# Scatterplots
+
+.pull-left[
+- A graph in which the paired (x,y) sample data are plotted with horizontal x-axis and
+a vertical y-axis.
+
+- Each individual (x,y) pair is plotted as a single point.
+
+- Scatterplots are created by setting up two continuous axes, then creating a dot for
+every pair of observations.
+
+]
+.pull-right[
+```{r fig.height=4, dev='svg', echo=FALSE}
+par(mar = c(4, 4, 1, 1))
+plot(cars, pch = 19, col = 'darkgray', las = 1, main = "Scatterplot of Speed VS Distance")
+```
+]
+---
+
+# Scatterplots (example)
+
+- Weight and systolic blood pressure of 10 patients.
+
+.pull-left[
+
+```{r}
+#occur <- matrix(c("67","69","85","83","74","81","97","92","114","85","120","125","140","160","130","180","150","140","200","130"),ncol=10,byrow=TRUE)
+x <- c(67,69,85,83,74,81,97,92,114,85)
+y <- c(120,125,140,160,130,180,150,140,200,130)
+df1 <- data.frame(x1=x, x2=y)
+names(df1)=c("Weight (kg)","SBP (mmHg)")
+knitr::kable(df1,align=rep('c', 7), format = 'html')
+```
+]
+.pull-right[
+```{r}
+ggplot(df1,aes(`Weight (kg)`,`SBP (mmHg)`))+geom_point(aes(color="firebrick",size=0.3))+ xlab("Weight (kg)")+ylab("SBP (mmHg)")+ggtitle("Scatterplot of Weight VS SBP")+ theme(plot.title = element_text(hjust = 0.5,size=20,face="bold"),axis.title.x = element_text(size=15, face="bold"), axis.title.y = element_text(size=15, face="bold"), legend.position = "none")
+```
+]
+---
+
+# Scatterplots Interpretation
+
+```{r, echo=FALSE,out.width="35%",out.height="18%",fig.cap="*slope depicts the direction, amount of scatter depicts the strength",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("figure/sc1.png","figure/sc2.png","figure/sc3.png"))
+```
+
+```{r eval=FALSE}
+img1 <- rasterGrob(as.raster(readPNG("figure/sc1.png")), interpolate = FALSE)
+img2 <- rasterGrob(as.raster(readPNG("figure/sc2.png")), interpolate = FALSE)
+img3 <- rasterGrob(as.raster(readPNG("figure/sc3.png")), interpolate = FALSE)
+grid.arrange(img1, img2, img3, ncol = 3)
+```
+
+```{r eval=FALSE}
+df<-data.frame(ImageName=c("knitr::include_graphics(\"figure/scatterplot1.png\")","knitr::include_graphics(\"figure/scatterplot2.png\")", "knitr::include_graphics(\"figure/scatterplot3.png\")"), Text = c("Perfect positive correlation (+1.00)", "Perfect negative correlation (-1.00)", "No relationship (0.00)"))
+# Change to names of my local images
+#df$ImageName =c("figure/scatterplot1.png","figure/scatterplot2.png","figure/scatterplot3.png")
+knitr::kable(df,align=rep('c', 2), escape = FALSE)
+# Add appropriate rmarkdown tagging
+#df$ImageName = sprintf("![](%s)", df$ImageName)
+#knitr::include_graphics('/path/to/image.png')
+#knitr::kable(df,align=rep('c', 2), format = 'html')
+         #      kable_styling(full_width=FALSE) %>% 
+         # collapse_rows(columns=1, valign="top"))
+               
+```
+---
+
+class: inverse, center, middle
+
+# Correlation VS Regression
+
+---
+
+# Correlation Analysis
+
+.pull-left[
+- Correlation is concerned with measuring **strength** (degree of association) and **direction**
+(positive or negative) of the relationship between variables.
+
+- No hypothesised cause and effect relationship between variables.
+
+- It does not matter which variable is on the x- or y-axis.
+]
+
+.pull-right[
+```{r echo=FALSE}
+x = runif(50,0,50)
+y = x + rnorm(50,0,5)
+df <- data.frame(x,y)
+ggplot(df,aes(x,y))+geom_point(color="#CC3399",aes(size=0.3))+ xlab("X - Height of Eldest Child")+ylab("Y - Height of Youngest Child")+theme(plot.title = element_text(hjust = 0.5,size=20,face="bold"),axis.title.x = element_text(size=20, face="bold"), axis.title.y = element_text(size=20, face="bold"), legend.position = "none")
+```
+
+]
+---
+
+# Regression Analysis
+
+.pull-left[
+- Regression analysis is helpful in assessing specific forms of the relationship between variables. 
+
+- The ultimate objective is to **predict** or **estimate** the value of one variable corresponding to a given value of another variable.
+
+- Causal relationship is believed to exist.
+
+- Potential response variable (dependent) on yaxis; explanatory or predictor variable
+(independent) on x-axis.
+]
+
+.pull-right[
+```{r echo=FALSE}
+x = runif(50,0,50)
+y = x + rnorm(50,0,5)
+df <- data.frame(x,y)
+ggplot(df,aes(x,y))+geom_point(color="blue4",aes(size=0.3))+ xlab("X - BMI")+ylab("Y - Fat Percentage")+geom_smooth(color="red",method='lm',se=FALSE)+theme(plot.title = element_text(hjust = 0.5,size=20,face="bold"),axis.title.x = element_text(size=20, face="bold"), axis.title.y = element_text(size=20, face="bold"), legend.position = "none")
+```
+]
+
+---
+
+class: inverse, center, middle
+
+# Simple Linear Correlation
+
+---
+
+# Correlation
+
+- A *correlation* is a relationship between two variables.
+
+- The data can be represented by the ordered pairs (x, y) where **x is usually the independent (or explanatory)** variable, and **y is the dependent (or response) variable**.
+
+- A scatterplot is used to determine whether a linear (straight line) correlation exists between two variables.
+
+.pull-left[
+
+```{r}
+#occur <- matrix(c("67","69","85","83","74","81","97","92","114","85","120","125","140","160","130","180","150","140","200","130"),ncol=10,byrow=TRUE)
+x <- c(67,69,85,83,74,81,97,92,114,85)
+y <- c(120,125,140,160,130,180,150,140,200,130)
+df1 <- data.frame(x1=x, x2=y)
+names(df1)=c("Weight (kg)","SBP (mmHg)")
+knitr::kable(df1,align="c", format = 'html',table.attr = "style='height:30%;'")%>% kable_styling(bootstrap_options = "striped", full_width = F)
+```
+]
+.pull-right[
+```{r fig.width = 4, fig.height = 4}
+ggplot(df1,aes(`Weight (kg)`,`SBP (mmHg)`))+geom_point(aes(color="firebrick",size=0.1))+ xlab("Weight (kg)")+ylab("SBP (mmHg)")+ggtitle("Scatterplot of Weight VS SBP")+ theme(plot.title = element_text(hjust = 0.5,size=10,face="bold"),axis.title.x = element_text(size=10, face="bold"), axis.title.y = element_text(size=12, face="bold"), legend.position = "none")
+```
+]
+
+
+---
+
+# Correlation Analysis
+
+- If we are interested only in determining whether a relationship exists, we employ correlation analysis.
+
+- No distinction between explanatory (x) and response (y) variable.
+
+- Requires both variables to be quantitative or continuous variables (no categorical or nominal variables).
+
+- Both variables must be normally distributed. If one or both are not, either transform the variables to near normality or use an alternative non-parametric test of Spearman.
+
+---
+
+# Interpreting Correlation (Strength)
+
+```{r echo=FALSE, fig.cap="Correlation scatter plots between two variables. Image credit: Yadav Suniti (2018)", out.width="70%",fig.align = "center"}
+knitr::include_graphics('figure/correlationsc.jpg')
+```
+---
+
+# Interpreting Correlation (Direction)
+## Positive Correlation
+
+.pull-left[
+- The values of the two variables (x,y) **deviate in the same direction**.
+
+- i.e. if an increase (or decrease) in the values of one variable results on an average, in a corresponding increase (or decrease) in the values of the other variable.
+]
+
+.pull-right[
+```{r echo=FALSE}
+knitr::include_graphics('figure/pos-corr.png')
+```
+]
+---
+# Positive Correlation (Example)
+
+1. Education level and salary potential.
+
+2. People suffer from depression and suicidal
+tendencies.
+
+3. Household income and expenditure.
+
+- In statistics, a perfect positive correlation is represented by the value of +1.00.
+
+- The points lie close to a straight line, which has a positive gradient or direction.
+
+---
+
+# Interpreting Correlation (Direction)
+## Negative Correlation
+
+.pull-left[
+
+- The values of the two variables (x,y) **deviate in opposite direction.**
+
+- i.e. if an increase (or decrease) in the values of one variable results in an average, in corresponding decrease (or increase) in the values of the other
+variable.
+]
+
+.pull-right[
+```{r echo=FALSE}
+knitr::include_graphics('figure/neg-corr.png')
+```
+]
+---
+# Negative Correlation (Example)
+
+1. Price and demand of goods.
+
+2. Depression and self esteem.
+
+3. Amount of exercises and percentage of body
+fat.
+
+- In statistics, a perfect negative correlation is represented by the value of -1.00.
+---
+# Simple Linear Correlation
+
+```{r, echo=FALSE,fig.align='center'}
+#knitr::include_graphics(c("figure/pos-lin.png","figure/negativelinear.png","figure/nocorrelation.png","figure/nonlinear.png"))
+img1 <- rasterGrob(as.raster(readPNG("figure/pos-lin.png")), interpolate = FALSE)
+img2 <- rasterGrob(as.raster(readPNG("figure/negativelinear.png")), interpolate = FALSE)
+img3 <- rasterGrob(as.raster(readPNG("figure/nocorrelation.png")), interpolate = FALSE)
+img4 <- rasterGrob(as.raster(readPNG("figure/nonlinear.png")), interpolate = FALSE)
+grid.arrange(img1, img2, img3, img4, ncol = 2)
+```
+
+---
+# Simple Linear Correlation
+
+```{r, echo=FALSE,fig.align='center'}
+#knitr::include_graphics(c("figure/pos-lin.png","figure/negativelinear.png","figure/nocorrelation.png","figure/nonlinear.png"))
+img1 <- rasterGrob(as.raster(readPNG("figure/pos-lin.png")), interpolate = FALSE)
+img2 <- rasterGrob(as.raster(readPNG("figure/negativelinear.png")), interpolate = FALSE)
+img3 <- rasterGrob(as.raster(readPNG("figure/nocorrelation.png")), interpolate = FALSE)
+img4 <- rasterGrob(as.raster(readPNG("figure/nonlinear.png")), interpolate = FALSE)
+grid.arrange(img1, img2, img3, img4, ncol = 2)
+```
+---
+
+class: inverse, center, middle
+
+# Correlation Coefficient
+
+---
+
+# Linear Correlation Coefficient
+
+- The linear correlation coefficient is a measure of the **strength** and the **direction** of a linear relationship between two variables. 
+
+- The symbol *r* represents the sample correlation coefficient. 
+
+- Like the mean and SD, *r* is strongly affected by outliers and sample size.
+
+- The formula for *r* is
+
+$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$
+
+- *r* does not measure nor describe curved or non-linear association no matter how strong.
+
+---
+
+# Simple Linear Correlation
+
+## Hypothesis Testing
+
+- Null hypothesis: There is no linear relationship between the two variables. ρ = 0.
+
+- Alternative hypothesis: There is a linear relationship between the two variables. ρ ≠ 0.
+
+- If your p-value is less than your significance level, the sample contains sufficient evidence to reject the null hypothesis and conclude that the correlation coefficient does not equal zero. In other words, the sample data support the notion that the relationship exists in the population.
+
+---
+
+# Correlation Coefficient, *r*
+
+- Unit-less and always between –1 and 1
+
+- The closer to 1, the **stronger the positive linear relationship** (+*r*)
+
+- The closer to –1, the **stronger the negative linear relationship** (-*r*)
+
+- The closer to 0, the **weaker any positive/negative linear relationship**
+
+- Equals 0, **no linear relationship exists**
+
+- The extreme values +1 and -1 indicate **perfect linear relationship** (points lie exactly along a straight line)
+
+---
+
+# Correlation Coefficient, *r*
+```{r echo=FALSE, fig.align='center'}
+knitr::include_graphics('figure/r-scale.png')
+```
+
+---
+
+# Correlation Coefficient, *r*
+```{r echo=FALSE, fig.align='center',out.width="80%"}
+knitr::include_graphics('figure/r-scale2.png')
+```
+
+---
+class: inverse, center, middle
+
+# Pearson's Product Moment Correlation Coefficient
+
+---
+# Pearson's Correlation Coefficient
+
+- The most popular correlation coefficient.
+
+- Used to determine the correlation between two variables under three conditions:
+
+  1. Both variables must be **interval or ratio** measures.
+  2. The relationship between the two variables **must be linear**.
+  3. Both variables are **normally distributed**.
+
+- Should use a large scale for variables (larger sample size) in this analysis.
+---
+# Pearson's Correlation Coefficient
+## Calculation of *r*
+
+1. Sum all the X-values $$\sum{X}$$
+2. Sum all the Y-values $$\sum{Y}$$
+3. Square each X-value and find the sum. $$\sum{X}^2$$
+4. Square each Y-value and find the sum. $$\sum{Y}^2$$
+---
+
+# Pearson's Correlation Coefficient
+## Calculation of *r*
+
+5. Multiply each X-value by its corresponding Y-value. Find the sum $$\sum{XY}$$
+6. Use these 5 sums to calculate the coefficient, r
+$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$
+
+---
+# Pearson's Correlation Coefficient
+## Example
+
+The age *X* in months and vocabulary *Y* were measured for six children, with the results shown in the table. Calculate the correlation coefficient, r for the following data. Interpret the result.
+
+```{r}
+x <- c(13, 14, 15, 16, 16, 18)
+y <- c(8, 10, 15, 20, 27, 30)
+df1 <- data.frame(x1=x, x2=y)
+names(df1)=c("Age","Vocabulary")
+knitr::kable(df1,align=rep('c', 6), format = 'html')
+```
+
+---
+# Pearson's Correlation Coefficient
+## Example
+
+```{r}
+x <- c(13, 14, 15, 16, 16, 18)
+y <- c(8, 10, 15, 20, 27, 30)
+x2 <-
+y2 <- 
+df1 <- data.frame(x1=x, x2=y)
+names(df1)=c("Age (x)","Vocabulary (y)")
+knitr::kable(df1,align=rep('c', 6), format = 'html')
+```
+
+
+---
+
+# References
+
+```{r, load_refs, echo=FALSE}
+
+bib <- ReadBib("bib.bib", check = FALSE)
+ui <- "- "
+```
+```{r, print_refs, results='asis', echo=FALSE, warning=FALSE, message=FALSE}
+writeLines(ui)
+print(bib[key = "R-rmarkdown"], 
+  .opts = list(check.entries = FALSE, 
+               style = "html", 
+               bib.style = "authoryear"))
+```
+
+
+---
+
+class: center, middle
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+The chakra comes from [remark.js](https://remarkjs.com), [**knitr**](http://yihui.name/knitr), and [R Markdown](https://rmarkdown.rstudio.com).

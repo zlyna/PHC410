@@ -1,0 +1,6 @@
+.title-slide hgroup h1 {
+  font-size: 45px;
+  font-family: "Tahoma", Times, serif;
+  font-
+  letter-spacing: 0;
+}

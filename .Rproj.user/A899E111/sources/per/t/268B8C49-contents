@@ -1,0 +1,318 @@
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(xlsx)
+library(janitor)
+library(skimr)
+library(lubridate)
+library(writexl)
+library(magrittr)
+library(openxlsx)
+
+tb_contact_ALL <- read_csv2("input/clean_data/TB_contact_all.csv")
+tb_index_ALL <- read_excel("input/clean_data/TB_index_all.xlsx")
+
+##########################################################################
+#                       INDEKS TO KONTAK RATIO
+##########################################################################
+
+ratio_ic <- tb_contact_ALL %>% count(`No Daftar Tibi Daerah`)
+
+colnames(tb_index_ALL)[colnames(tb_index_ALL) == "Nombor Daftar Tibi Daerah"] <- "No Daftar Tibi Daerah"
+ratio_index <- right_join(ratio_ic,tb_index_ALL,by="No Daftar Tibi Daerah")
+colnames(ratio_index)[colnames(ratio_index) == "n"] <- "Jumlah Kontak"
+ratio <- mutate(ratio_index,`Jumlah Kontak` = ifelse(is.na(`Jumlah Kontak`),0,`Jumlah Kontak`))
+
+write_csv2(ratio,"input/clean_data/TBic_ratio.csv")
+
+
+######### RATIO of INDEX-TO-CONTACT
+
+ratio_ic <- read_csv2("input/clean_data/TBic_ratio.csv")
+bratio <- ratio_ic %>% filter(`Jumlah Kontak`!= 0) 
+total <- ratio %>% count(Negeri)
+colnames(total) <- c("Negeri","total")
+bystate <- ratio_ic %>% count(Negeri,`Jumlah Kontak`)
+colnames(bystate) <- c("Negeri","Jumlah Kontak","n")
+bystate$Range <- cut(bystate$`Jumlah Kontak`, breaks=c(0,10,20,30,40,50,60,70,80,90,100,Inf))
+#bystate$Range <- cut(bystate$`Jumlah Kontak`, c(0,10,20,30,40,50,60,70,80,90,100,Inf),include.lowest = TRUE)
+bystate <- bystate %>% mutate(`Range` =ifelse(is.na(Range),"0",Range))
+bystate <- bystate %>% mutate(Range =
+                                ifelse(Range=="1","1-10",
+                                       ifelse(Range=="2","11-20",
+                                              ifelse(Range=="3","21-30",
+                                                     ifelse(Range=="4","31-40",
+                                                            ifelse(Range=="5","41-50",
+                                                                   ifelse(Range=="6","51-60",
+                                                                          ifelse(Range=="7","61-70",
+                                                                                 ifelse(Range=="8","71-80",
+                                                                                        ifelse(Range=="9","81-90",
+                                                                                               ifelse(Range=="10","91-100",
+                                                                                                      ifelse(Range=="11","Above 100",Range))))))))))))
+bystate <- bystate %>% group_by(Negeri,Range) %>% summarise(Total = sum(n, na.rm = TRUE))
+statetotal <- bystate %>% group_by(Negeri) %>% summarise("State total" = sum(Total, na.rm = TRUE))
+joinstate <- left_join(bystate,statetotal,by="Negeri")
+joinstate <- mutate(joinstate,`Perc` = Total / `State total`*100)
+#joinstate <- joinstate %>% mutate(`Range` = replace_na(`Range`, 0))
+wb <- createWorkbook("input/clean_data/TB_stateratio.xlsx")
+addWorksheet(wb, "state-ALL")
+writeData(wb,"state-ALL",joinstate)
+saveWorkbook(wb, file = "input/clean_data/TB_stateratio.xlsx", overwrite = TRUE)
+
+bp <- ggplot(joinstate,aes(x=Negeri,y=Perc,fill=Range))+geom_bar(stat = "identity")+ coord_flip() 
+png("graphics/exploratory_figures/Barplot-Indeks-Kontak-stateratio.png")
+print(bp)
+dev.off()
+
+newstate <- joinstate %>% select(Negeri,Range,Total)
+totalratio <- newstate %>% group_by(Range) %>% summarise("Range Total" = sum(Total, na.rm = TRUE))
+wb <- loadWorkbook("input/clean_data/TB_stateratio.xlsx")
+addWorksheet(wb, "group-ratio")
+writeData(wb,"group-ratio",totalratio)
+saveWorkbook(wb, file = "input/clean_data/TB_stateratio.xlsx", overwrite = TRUE)
+
+################################################
+
+##### zero by state ######################
+zerostate <- joinstate %>% filter(Range=="0") %>% select(Negeri,Total)
+zerostate <- mutate(zerostate,`Perc` = zerostate$Total / sum(zerostate$Total) * 100)
+zerostate$Perc <- zerostate$Total / sum(zerostate$Total) * 100
+wb <- loadWorkbook("input/clean_data/TB_stateratio.xlsx")
+addWorksheet(wb, "withoutcontact")
+writeData(wb,"withoutcontact",zerostate)
+saveWorkbook(wb, file = "input/clean_data/TB_stateratio.xlsx", overwrite = TRUE)
+###################################
+
+#### calculate the mean ##################
+
+#calculate the mean & stdev of Jumlah Kontak group by "Negeri"
+aggregate(ratio[,"Jumlah Kontak"], list(ratio$Negeri.x), mean)
+
+#calculate the mean & stdev of Jumlah Kontak group by "Negeri"
+ratioN <- ratio%>% filter(`Jumlah Kontak` <=10)
+aggregate(ratioN[,"Jumlah Kontak"], list(ratioN$Negeri.x), mean)
+
+#as.data.frame(table(cut(ratio$`Jumlah Kontak`, breaks=seq(0,1700, by=10))))
+ratio.cat <- function(x, lower=0,upper,by=50,sep="-",above.char="+"){
+  #labs <- c(paste(seq(lower,upper - by, by=by),seq(lower + by - 1, upper - 1, by = by), sep = sep), paste(upper, above.char,sep = ""))
+
+  #cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf), right = FALSE, labels = labs)
+  cut(floor(x), breaks = c(seq(lower, upper, by = by), Inf), right = FALSE)
+  }
+
+## finding appropriate breaks for ratio
+all_ratio <- as.data.frame(table(cut(ratio$`Jumlah Kontak`, breaks=seq(0,1700, by=10))))
+colnames(all_ratio) <- c("Range","Freq")
+all_ratio$Perc <- all_ratio$Freq / sum(all_ratio$Freq) * 100
+write_xlsx(all_ratio,"input/clean_data/TBic_allratio.xlsx")
+
+#conclusion - create barplot for overall percentage & for kontak < 10 since less than 10 has the biggest percentage
+ratio_freq <- as.data.frame(table(ratio.cat(ratio$`Jumlah Kontak`,lower=0,upper=11,by=1)))
+colnames(ratio_freq) <- c("Range","Freq")
+ratio_freq$Perc <- ratio_freq$Freq / sum(ratio_freq$Freq) * 100
+write_xlsx(ratio_freq,"input/clean_data/TBic_ratiofreq.xlsx")
+
+bp <- ggplot(ratio_freq,aes(x=Range,y=Perc,fill=Range))+geom_bar(width = 1,stat = "identity")
+png("graphics/exploratory_figures/Barplot-Indeks-Kontak-ratio-v10.png")
+print(bp)
+dev.off()
+
+####################################3
+
+#################################### HADIR PEMERIKSAAN #############
+
+tb_contact_ALL %>% filter(is.na(`Tarikh Pemeriksaan Pertama`)) %>% count()
+index_state <- tb_index_ALL %>% select(`No Daftar Tibi Daerah`,Negeri)
+tb_contact_state <- right_join(index_state,tb_contact_ALL,by="No Daftar Tibi Daerah")
+tb_contact_state_ws <- tb_contact_state %>% filter(!is.na(Negeri))
+#this file contains all contacts that have index information
+wb <- loadWorkbook("input/clean_data/TBcontact_index.xlsx")
+addWorksheet(wb, "contactindex")
+writeData(wb,"contactindex",tb_contact_state_ws)
+saveWorkbook(wb, file = "input/clean_data/TBcontact_index.xlsx", overwrite = TRUE)
+
+
+## tidak mempunyai indeks (327 index were not found)
+noindeks <- tb_contact_state %>% filter(is.na(Negeri)) %>% count(`No Daftar Tibi Daerah`)
+write_xlsx(noindeks,"input/clean_data/contact_windex.xlsx")
+
+#
+
+#################################################################
+
+##### zero by state - not used
+ratio_ic <- read_csv2("input/clean_data/TBic_ratio.csv")
+zerobystate<- ratio_ic %>% filter(`Jumlah Kontak`==0) %>% count(Negeri.x)
+total <- ratio_ic %>% count(Negeri.x)
+colnames(total) <- c("Negeri","total")
+bystate <- ratio_ic %>% count(Negeri.x,`Jumlah Kontak`)
+colnames(bystate) <- c("Negeri","Jumlah Kontak","n")
+bystate$groups <- cut(bystate$`Jumlah Kontak`, breaks=c(-1,0,1,2,3,4,5,6,7,8,9,10,Inf))
+bystate <- mutate(bystate,`Range` = ifelse(`Jumlah Kontak`>10,"11+",`Jumlah Kontak`))
+bystate <- bystate %>% group_by(Negeri,Range) %>% summarise(Total = sum(n, na.rm = TRUE))
+statetotal <- bystate %>% group_by(Negeri) %>% summarise(Bigtotal = sum(Total, na.rm = TRUE))
+joinstate <- left_join(bystate,statetotal,by="Negeri")
+joinstate <- mutate(joinstate,`Perc` = Total / Bigtotal*100)
+joinstate <- joinstate %>% arrange(Negeri,as.integer(Range))
+joinstate %>% mutate(Range = factor(Range, levels = Range))
+
+write_xlsx(joinstate,"input/clean_data/TB_stateratio-b10.xlsx")
+bp <- ggplot(joinstate,aes(x=Negeri,y=Perc,fill=Range))+geom_bar(stat = "identity")+ coord_flip() 
+png("graphics/exploratory_figures/Barplot-Indeks-Kontak-ratio-b10.png")
+print(bp)
+dev.off()
+#######################
+
+
+
+#conclusion - create barplot for overall percentage & for kontak < 50 since less than 10 has the biggest percentage
+ratio_freq <- as.data.frame(table(ratio.cat(ratio$`Jumlah Kontak`,lower=0,upper=50,by=10)))
+colnames(ratio_freq) <- c("Range","Freq")
+ratio_freq$Perc <- ratio_freq$Freq / sum(ratio_freq$Freq) * 100
+write_xlsx(ratio_freq,"input/clean_data/TBic_ratiofreq50.xlsx")
+
+#create barplot & pie chart
+bp <- ggplot(ratio_freq,aes(x=Range,y=Perc,fill=Range))+geom_bar(width = 1,stat = "identity")
+png("graphics/exploratory_figures/Barplot-Indeks-Kontak-ratio-v50.png")
+print(bp)
+dev.off()
+
+######### SPLIT RATIO INDEX INTO STATES #########
+
+ratio_ic <- read_csv2("input/clean_data/TBic_ratio.csv")
+#state_ratio <- tally(group_by(ratio_ic, Negeri, y=ratio.cat(ratio_ic$`Jumlah Kontak`, lower = 0, upper = 50,by=10))) %>% ungroup() %>% spread(y,n, fill=0)
+#upper = 100, by=50
+state_ratio <- tally(group_by(ratio_ic, Negeri, y=ratio.cat(ratio_ic$`Jumlah Kontak`, lower = 0, upper = 100,by=10))) %>% ungroup() %>% spread(y,n, fill=0)
+write_xlsx(state_ratio,"input/clean_data/TBic_ratioby50-spread.xlsx")
+state_ratio <- tally(group_by(ratio_ic, Negeri, y=ratio.cat(ratio_ic$`Jumlah Kontak`, lower = 0, upper = 100,by=10))) %>% ungroup() 
+#upper = 100, by=50
+colnames(state_ratio) <- c("Negeri","Range","Freq")
+sratio <- state_ratio %>% dplyr::group_by(Negeri) %>% dplyr::mutate(Perc = Freq / sum(Freq) * 100) %>% arrange(desc(Negeri))
+write_xlsx(sratio,"input/clean_data/TBic_ratioby50.xlsx")
+bp <- ggplot(sratio,aes(x=Negeri,y=Perc,fill=Range))+geom_bar(stat = "identity") + coord_flip() 
+png("graphics/exploratory_figures/Barplot-TBICratio-State-ALL.png")
+print(bp)
+dev.off()
+
+#upper = 10, by=1
+state_ratio <- tally(group_by(ratio_ic, Negeri, y=cut(ratio_ic$`Jumlah Kontak`, breaks=seq(0,11, by=1)))) %>% ungroup()
+#there's warning for data over than 11
+state_ratio <- state_ratio %>% filter(!is.na(y))
+colnames(state_ratio) <- c("Negeri","Range","Freq")
+sratio <- state_ratio %>% dplyr::group_by(Negeri) %>% dplyr::mutate(Perc = Freq / sum(Freq) * 100)
+write_xlsx(sratio,"input/clean_data/TBic_ratiobelow10.xlsx")
+bp <- ggplot(sratio,aes(x=Negeri,y=Perc,fill=Range))+geom_bar(stat = "identity") + coord_flip() 
+bf <- ggplot(sratio,aes(x=Negeri,y=Freq,fill=Range))+geom_bar(stat = "identity") + coord_flip() 
+png("graphics/exploratory_figures/Barplot-TBICratio-State-b10.png")
+print(bp)
+dev.off()
+
+
+##########################################################################
+#                       INCIDENCE/PREVALENCE
+##########################################################################
+
+#<------ TO MATCH WHEN CONTACT BECOMES INDEX  ---------->
+
+tbc_clean <- read_excel("input/clean_data/TB_contact_unique.xlsx")
+tbi_clean <- read_excel("input/clean_data/TB_index_CLEAN.xlsx")
+tbc_dupe <- read_excel("input/clean_data/TB_contact_duplicate-CLEAN-ALL.xlsx",sheet = "completed")
+
+#for cases with "Clean No KP" != "TIADA", "TIDAK LENGKAP" & "NO KP INDEKS"
+#tbi_sub <- tbi_clean %>% select(`ID Pesakit`,`Tarikh Pendaftaran`,Nama,`No KP Indeks`,`Clean No KP`,`Kategori Kes Tibi`,Warganegara,Negeri)
+#tbc_sub <- tbc_clean %>% filter(`Clean No KP`!="TIADA" & `Clean No KP`!="TIDAK LENGKAP") %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+#tbc_sub <- tbc_clean %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+
+#matching TB Indeks & TB Kontak (does not include duplicates which need verification)
+#innerjoinDF <- inner_join(tbi_sub,tbc_sub,by="Clean No KP")
+#all columns
+uniqueDF <- full_join(tbi_clean,tbc_clean,by="Clean No KP")
+uniqueDF <- inner_join(tbi_clean,tbc_clean,by="Clean No KP")
+uniqueDF$`Tarikh Daftar Kes` <- lubridate::dmy(uniqueDF$`Tarikh Daftar Kes`)
+uniqueDF$`Tarikh Pendaftaran` <- lubridate::dmy(uniqueDF$`Tarikh Pendaftaran`)
+unique_join <- uniqueDF %>% arrange(`Clean No KP`,`Tarikh Pendaftaran`,`Tarikh Daftar Kes`)
+write_xlsx(unique_join,"input/clean_data/TBic_unique.xlsx")
+write_xlsx(unique_join,"input/clean_data/TBic_unique-fulljoin.xlsx")
+#clean version of TBic_unique is TBic_unique-edit-ALL.xlsx
+
+#matching TB indeks & duplicates
+#tbcdupe_sub <- tbc_dupe  %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+dupeDF <- inner_join(tbi_clean,tbc_dupe,by="Clean No KP")
+dupeDF$`Tarikh Daftar Kes` <- lubridate::dmy(dupeDF$`Tarikh Daftar Kes`)
+dupeDF$`Tarikh Pendaftaran` <- lubridate::dmy(dupeDF$`Tarikh Pendaftaran`)
+dupe_join <- dupeDF %>% arrange(`Clean No KP`,`Tarikh Pendaftaran`,`Tarikh Daftar Kes`)
+write_xlsx(dupe_join,"input/clean_data/TBic_dupe.xlsx")
+#clean version of TBic_dupe is TBic_duplicate-CLEAN-ALL.xlsx
+
+#or combine both
+tbc_both <- rbind(tbc_clean,tbc_dupe)
+bothDF <- inner_join(tbi_clean,tbc_both,by="Clean No KP")
+bothDF$`Tarikh Daftar Kes` <- lubridate::dmy(bothDF$`Tarikh Daftar Kes`)
+bothDF$`Tarikh Pendaftaran` <- lubridate::dmy(bothDF$`Tarikh Pendaftaran`)
+both_join <- bothDF %>% arrange(`Clean No KP`,`Tarikh Pendaftaran`,`Tarikh Daftar Kes`)
+write_xlsx(both_join,"input/clean_data/TBic_ALL.xlsx")
+
+
+############################################################
+#     ANALYSING TB UNIQUE (CLEANED)
+############################################################
+
+tbic_unique <- read_excel("input/clean_data/TBic_unique-edit-ALL.xlsx",sheet = "final")
+tbic_dupe <- read_excel("input/clean_data/TBic_dupe-edit-ALL.xlsx",sheet = "all")
+
+tbic_all <- rbind(tbic_unique,tbic_dupe)
+tbic_all <- tbic_all %>% arrange(`Clean No KP`,`Tarikh Pendaftaran`,`Tarikh Daftar Kes`)
+tbic_unique <- mutate(tbic_unique,`Kategori Kontak` = ifelse(`Tarikh Daftar Kes` <= `Tarikh Pendaftaran`,1,2))
+
+write_xlsx(tbic_unique,"input/clean_data/TBic_unique-ALLv2.xlsx")
+#notduplicate <- tbic_unique[!duplicated(tbic_unique)&!duplicated(tbic_unique,fromLast = TRUE), ]
+
+#kontak yg menjadi indeks tetapi tidak menjalani pemeriksaan pertama
+tbic_unique %>% filter(`Kategori Kontak`==1 & is.na(`Tarikh Pemeriksaan Pertama`)) %>% select(`Tarikh Pendaftaran`,`Tarikh Daftar Kes`,`Tarikh Pemeriksaan Pertama`)
+
+tbic_dupe[duplicated(tbic_dupe), ]
+tbic_dupe_clean <- tbic_dupe[!duplicated(tbic_dupe), ]
+#dupe <- tbic_dupe[duplicated(tbic_dupe[c("Tarikh Pendaftaran","Tarikh Daftar Kes","No KP Indeks.x")]  ), ]
+#all duplicates
+dupe <- tbic_dupe[duplicated(tbic_dupe[c("Tarikh Pendaftaran","Tarikh Daftar Kes","No KP Indeks.x")]) | duplicated( tbic_dupe[c("Tarikh Pendaftaran","Tarikh Daftar Kes","No KP Indeks.x")],fromLast = TRUE), ]
+notdupe <- tbic_dupe[!duplicated(tbic_dupe[c("Tarikh Pendaftaran","Tarikh Daftar Kes","No KP Indeks.x")]) & !duplicated( tbic_dupe[c("Tarikh Pendaftaran","Tarikh Daftar Kes","No KP Indeks.x")],fromLast = TRUE), ]
+
+file <- "D:/Workspace/TB-IKU/input/clean_data/TBic_dupe-edit-ALL - Copy.xlsx"
+#wb <- createWorkbook("input/clean_data/TBic_.xlsx")
+addWorksheet(wb, "dupe")
+addWorksheet(wb, "notdupe")
+writeData(wb,"dupe",dupe)
+writeData(wb,"notdupe",notdupe)
+saveWorkbook(wb, file = "input/clean_data/TBic_dupe-edit-ALL - Copy.xlsx", overwrite = TRUE)
+
+########################## TB UNIQUE ###################
+#     #kontak/indeks with unique entry (might have the same ID - KES BERULANG)
+###########################
+
+tab <- tbic_unique %>% count(`Kategori Kes Tibi`)
+test <- tbic_unique %>% count(`Kategori Kes Tibi`,`Kategori Kontak`)
+tbic_unique %>% filter(`Kategori Kontak`==1 & is.na(`Tarikh Pemeriksaan Pertama`)) %>% count()
+tbic_unique %>% filter(`Kategori Kontak`==1 & !is.na(`Tarikh Pemeriksaan Pertama`)) %>% count()
+tbic_unique %>% filter(`Kategori Kontak`==1 & !is.na(`Tarikh Pemeriksaan Pertama`) & `Menghidap Tibi (Pemeriksaan Pertama)`=="YA") %>% count()
+tbic_unique %>% filter(`Kategori Kontak`==1 & !is.na(`Tarikh Pemeriksaan Pertama`) & `Menghidap Tibi (Pemeriksaan Pertama)`=="TIDAK") %>% count()
+
+######################### TB DUPE ######################
+#
+########################################################
+
+notdupe <- mutate(notdupe,`Kategori Kontak` = ifelse(`Tarikh Daftar Kes` <= `Tarikh Pendaftaran`,1,2))
+
+
+###################### TB 57k ###########
+
+sub_verify <- read_excel("input/clean_data/TB_contact_duplicate-CLEAN-ALL.xlsx",sheet="completed")
+sub_match <- inner_join(tb_index_ALL,sub_verify,by="Clean No KP")
+addWorksheet(wb, "data-50k")
+writeData(wb,"data-50k",sub_match)
+saveWorkbook(wb, file = "input/clean_data/TBic_unique-edit-ALL.xlsx", overwrite = TRUE)
+########################################
+
+
+
+
+

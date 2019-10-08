@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567749198881.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "467067470",
+    "id" : "361EF80C",
+    "lastKnownWriteTime" : 1566786909,
+    "last_content_update" : 1566786909,
+    "path" : "~/Dropbox/Workspace-DBX/TB-IKU/code/raw_code/tb_iku_clean.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "251,40",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

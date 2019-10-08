@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570538560403.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1605763543",
+    "id" : "82365459",
+    "lastKnownWriteTime" : 1570557865,
+    "last_content_update" : 1570557865616,
+    "path" : "D:/Workspace/PHC410/index.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "108,0",
+        "scrollLine" : "100"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

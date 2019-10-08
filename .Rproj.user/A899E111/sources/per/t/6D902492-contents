@@ -1,0 +1,83 @@
+
+#set working directory
+#setwd("~/Dropbox/Workspace-DBX/TB-IKU")
+
+#load library
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(skimr)
+library(lubridate)
+
+#read dataset into dataframe
+tbi_2013 <- read_excel("input/raw_data/TBIS101A-2013.xlsx")
+tbi_2015 <- read_excel("input/raw_data/TBIS101A-2015.xlsx",sheet = "TBIS 101A")
+tbc_2013 <- read_excel("input/raw_data/TBIS101C_2013.xlsx")
+tbc_2014 <- read_excel("input/raw_data/TBIS101C_2014.xlsx")
+tbc_2015 <- read_excel("input/raw_data/TBIS101C_2015.xlsx")
+tbc_2016 <- read_excel("input/raw_data/TBIS101C_2016.xlsx")
+
+
+#combine TB indeks dataframe
+tb_index <- rbind(tbi_2013,tbi_2015)
+
+#check missing values
+skim(tb_index)
+
+#check incompatible columns between TB kontak 2013 (tbc_2013) and 2015 (tbc_2015)
+setdiff(names(tbc_2015),names(tbc_2013))
+setdiff(names(tbc_2013),names(tbc_2015))
+
+#4 incompatible variables will be retrieved and added to  tbc_2013 and tbc_2014 based  on matching `Nama` in tbi_2013 and `Nama Kes Indeks` in tbc_2013.
+
+#1 - change 'Nombor Daftar Tibi Daerah' in TB Indeks into 'No Daftar Tibi Daerah' as both column names should be identical before it can be matched
+colnames(tbi_2013)[colnames(tbi_2013) == "Nombor Daftar Tibi Daerah"] <- "No Daftar Tibi Daerah"
+colnames(tbc_2013)[colnames(tbc_2013) == "ID"] <- "ID Pesakit"
+
+#select missing column from tbi_2013 & add to tbc_2013
+tbi_2013v2 <- tbi_2013 %>% select(`ID Daftar Kes`,`No Daftar Tibi Daerah`,`ID TBIS 10A-1`, `ID TBIS 10A-4`,`ID TBIS 10A-3`)
+tbc_2013v2 <- right_join(tbi_2013v2, tbc_2013, by="No Daftar Tibi Daerah")
+
+#keep it in a new file
+write_csv(tbc_2013v2,"TBC_2013v2.csv")
+
+#drop incompatible columns from tbc_2015
+tbc_2015v2 <- tbc_2015 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+
+
+#COMBINE tbc_2013v2 & tbc_2015v2
+#but couldnt since no bimbit in 2013 is in character - need to convert to numeric first
+#and new dataframe is saved as TBIC_20132015.csv
+tbc_2013v2 <- tbc_2013v2 %>% mutate(`No Bimbit` = as.numeric(`No Bimbit`))
+tbc_20132015 <- rbind(tbc_2013v2,tbc_2015v2)
+write_csv(tbc_20132015,"TBC_20132015.csv")
+
+#NEXT CLEAN TBC_2014, TBC_2016
+tbc_2014 <- read_excel("TBIS101C_2014.xlsx")
+tbc_2016 <- read_excel("TBIS101C_2016.xlsx")
+#drop incompatible columns from tbc_2015
+tbc_2014v2 <- tbc_2014 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+tbc_2016v2 <- tbc_2016 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+#combine rows
+tbc_20132014 <- bind_rows(tbc_20132015,tbc_2014v2)
+
+#next baru add no pengenalan diri into contact column once dah clear to match nama indeks
+
+
+##### AS OF 7 sept 2019
+tbc_2013 <- read_excel("input/raw_data/TBIS101C_2013.xlsx")
+tbc_2014 <- read_excel("input/raw_data/TBIS101C_2014.xlsx")
+tbc_2015 <- read_excel("input/raw_data/TBIS101C_2015.xlsx")
+tbc_2016 <- read_excel("input/raw_data/TBIS101C_2016.xlsx")
+tbc_2017 <- read_excel("input/raw_data/TBIS101C_2017.xlsx")
+tbc_2018 <- read_excel("input/raw_data/TBIS101C_2018.xlsx")
+
+tbc_20142018 <- rbind(tbc_2014,tbc_2015,tbc_2016,tbc_2017,tbc_2018)
+colnames(tbc_2013)[colnames(tbc_2013) == "ID"] <- "ID Kontak"
+colnames(tbc_20142018)[colnames(tbc_20142018) == "ID TBIS 10C-3"] <- "ID Kontak"
+
+#drop incompatible columns
+#drop incompatible columns from tbc_20142018
+tbc_20142018v2 <- tbc_20142018 %>% select(-c(`ID TBIS 10C-3`,`(Recode) Kategori Kes Tibi`, `(Recode) Lokasi Anatomi Tibi (Diagnosa)`, `Minggu Epid (Tarikh Daftar Kes)`, `Minggu Epid (Tarikh Diagnosa)`,`Minggu Epid (Tarikh Notifikasi)`, `Minggu Epid (Tarikh Pemeriksaan Pertama)`, `Minggu Epid (Tarikh Pemeriksaan Kedua)`, `Minggu Epid (Tarikh Pemeriksaan Ketiga)`, `Minggu Epid (Tarikh Pemeriksaan Keempat)`, `Bulan Epid (Tarikh Diagnosa)`, `Bulan Epid (Tarikh Daftar Kes)`, `Bulan Epid (Tarikh Notifikasi)`, `Bulan Epid (Tarikh Pemeriksaan Pertama)`, `Bulan Epid (Tarikh Pemeriksaan Kedua)`, `Bulan Epid (Tarikh Pemeriksaan Ketiga)`, `Bulan Epid (Tarikh Pemeriksaan Keempat)`, `Tahun Epid (Tarikh Daftar Kes)`, `Tahun Epid (Tarikh Notifikasi)`, `Tahun Epid (Tarikh Diagnosa)`, `Tahun Epid (Tarikh Pemeriksaan Pertama)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Kedua)`, `Tahun Epid (Tarikh Pemeriksaan Ketiga)`, `Tahun Epid (Tarikh Pemeriksaan Keempat)`))
+
+

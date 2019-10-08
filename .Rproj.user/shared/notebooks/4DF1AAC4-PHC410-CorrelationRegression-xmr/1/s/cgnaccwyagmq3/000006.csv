@@ -1,0 +1,2 @@
+"0","df<-data.frame(ImageName= c(""figure/scatterplot1.png"", ""figure/scatterplot2.png"", ""figure/scatterplo3.png""), Text = c(""Perfect positive correlation (+1.00)"", ""Perfect negative correlation (-1.00)"", ""No relationship (0.00)""))"
+"0","knitr::kable(df,align=rep('c', 2), format = 'html')"

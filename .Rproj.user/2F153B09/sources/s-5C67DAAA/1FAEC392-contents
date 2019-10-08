@@ -1,0 +1,12 @@
+
+slides > slide:not(.nobackground):before {
+  width: 150px;
+  height: 65px;
+  background-size: 150px 65px;
+}
+
+hgroup h1 {
+  font-size: 45px;
+  font-style: bold;
+  letter-spacing: 0;
+}

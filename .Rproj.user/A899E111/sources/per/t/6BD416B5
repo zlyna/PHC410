@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567839329793.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6BD416B5",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1567839329793,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "B01BAC99",
+        "caption" : "tbi_2013",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=tbi_2013&cache_key=B01BAC99",
+        "displayedObservations" : "24069",
+        "environment" : "",
+        "object" : "tbi_2013",
+        "preview" : "0",
+        "totalObservations" : "24069",
+        "variables" : "127"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

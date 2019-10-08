@@ -1,0 +1,270 @@
+
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(skimr)
+library(lubridate)
+library(writexl)
+library(magrittr)
+
+#tb_contact <- read_excel("input/clean_data/TB_contact.xlsx")
+tb_contactORI <- read_csv2("input/clean_data/TB_contact.csv")
+
+## <-------- CLEANING NO KAD PENGENALAN FOR TB KONTAK --------->
+tb_contact <- tb_contactORI %>% mutate_if(is.character, toupper)
+
+#save kontak which used KNK as its No Kad Pengenalan
+KNK <- tb_contact %>% filter(str_detect(tb_contact$`No Kad Pengenalan`,"KNK"))
+write_xlsx(KNK,"input/clean_data/TB_contact_KNK.xlsx")
+
+tb_contact <- subset(tb_contact, !grepl("^TIADA",tb_contact$`Nama Kontak`))
+
+tb_contact <- mutate(tb_contact, "Clean No KP" = gsub("[[:space:]]","",`No Kad Pengenalan`))
+tb_contact <- mutate(tb_contact, "Clean No KP" = gsub("[-]","",`Clean No KP`))
+
+#detect dates
+dates = "([0-9]{1,2})[:punct:]([0-9]{1,2})[:punct:]([0-9]{2,4})" # detect dates
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,dates))] = ""
+
+tb_contact$`Clean No KP` <- gsub("^PASSPORT|^PASPORT|^UNHCR|^SB|TIDAK|TIADA", "",tb_contact$`Clean No KP`)
+#remove everything in parenthesis (to cater problem with KNK) and others
+tb_contact$`Clean No KP` <- gsub("\\s*\\([^\\)]+\\)","", tb_contact$`Clean No KP`)
+
+IDusingName <- tb_contact %>% filter(`Nama Kontak`==`No Kad Pengenalan`)
+write_xlsx(IDusingName,"input/clean_data/TB_contactWName.xlsx")
+
+tb_contact$`Clean No KP`[which(tb_contact$`No Kad Pengenalan`==tb_contact$`Nama Kontak`)] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`No Kad Pengenalan`,tb_contact$`No Daftar Tibi Daerah`))] = "TIDAK LENGKAP"
+#tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,tb_contact$`No Daftar Tibi Daerah`))] = "TIDAK LENGKAP"
+
+#set it as "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(tb_contact$`Clean No KP`!="TIADA" &  tb_contact$`Clean No KP`!= "TIDAK LENGKAP" & str_detect(tb_contact$`Clean No KP`,"^[A-z]+$"))] = "TIDAK LENGKAP"
+#tb_contact$`Clean No KP` <- gsub("([[:punct:]])\\1+","", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("([[:punct:]])","", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\'", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\.", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\*", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\/", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\`", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\,", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\_", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\(PASSPORT\\)", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\(M\\)", "", tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\([0-9a-zA-Z^]+\\)", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\([:alpha:]{4,}$\\)", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("[0-9]\\+", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\(.*\\)", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("\\(.*", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"^12345"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"(\\d)\\1{5,}"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"DOB"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"UNKNOWN"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"TINGKATAN"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,tb_contact$`No Daftar Tibi Daerah`))] = "TIDAK LENGKAP"
+#repeated number: 2,531 cases
+
+tb_test <- tb_contact %>% filter(str_detect(`Clean No KP`,":"))
+tb_test <- mutate(tb_test,"Removed Identifier"=gsub(".*:","",`Clean No KP`))
+tb_test <- mutate(tb_test,"Identifier"=gsub(":.*","",`Clean No KP`))
+#records contain identifier prefix were saved in TB_contact_prefix.xlsx
+write_xlsx(tb_test,"input/clean_data/TB_contact_prefix.xlsx")
+
+#tb_contact %>% filter(str_detect(`Clean No KP`,":")) %>% select(`No Kad Pengenalan`,`Clean No KP`)
+#no of cases = 1,347 cases
+tb_contact$`Clean No KP` <- gsub(".*:", "",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP` <- gsub("^PPRF", "RF",tb_contact$`Clean No KP`)
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"NOI/C"))] = "TIDAK LENGKAP"
+#tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"^KNK"))] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(tb_contact$`Clean No KP`!= "TIDAK LENGKAP" & str_detect(tb_contact$`Clean No KP`,"^[A-z]+$"))] = "TIDAK LENGKAP"
+
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"TAHUN|THN"))] = "TIDAK LENGKAP"
+#shortID <- tb_contact %>% filter(str_length(`Clean No KP`) < 5) 
+#keep it in a file
+#write_xlsx(shortID,"input/clean_data/TB_contact_shortID.xlsx")
+
+tb_contact$`Clean No KP`[which(str_length(tb_contact$`Clean No KP`)<=5)] = "TIDAK LENGKAP"
+tb_contact$`Clean No KP`[which(str_detect(tb_contact$`Clean No KP`,"^TIADA|NIL")|is.na(tb_contact$`Clean No KP`))] = "TIDAK LENGKAP"
+
+#complete Clean No KP
+#write_xlsx(tb_contact,"input/clean_data/TB_contact_cleanKP.xlsx")
+write_csv2(tb_contact, "input/clean_data/TB_contact_cleanKP.csv")
+
+
+## <------------ Cleaning No KP Indeks in TB Contact ------------->
+
+#cleaning space and hyphens
+#2
+tb_contact$`No KP Indeks` <- gsub("[[:space:]]", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("[-]", "",tb_contact$`No KP Indeks`)
+
+#8 - detect dates
+dates = "([0-9]{1,2})[:punct:]([0-9]{1,2})[:punct:]([0-9]{4})" # detect dates
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,dates))] = ""
+
+#3
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,tb_contact$`No Daftar Tibi Daerah`))] = "TIDAK LENGKAP"
+
+#4
+tb_contact$`No KP Indeks` <- gsub("^PASSPORT|^PASPORT|^UNHCR|^SB|TIDAK|TIADA", "",tb_contact$`No KP Indeks`)
+
+
+#7
+#tb_contact <- mutate(tb_contact, "Clean No KP" = ifelse(str_detect(`Clean No KP`,"[:punct:]"),"TIDAK LENGKAP",`Clean No KP`))
+tb_contact$`No KP Indeks` <- gsub("([[:punct:]])","", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\'", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\.", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\*", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\/", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\`", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\,", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\_", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\(PASSPORT\\)", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\(M\\)", "", tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\([0-9a-zA-Z^]+\\)", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\([:alpha:]{4,}$\\)", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("[0-9]\\+", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\(.*\\)", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("\\(.*", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"^12345"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"(\\d)\\1{5,}"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"DOB"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"UNKNOWN"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"TINGKATAN"))] = "TIDAK LENGKAP"
+
+##9 - another cleaning
+tb_contact$`No KP Indeks` <- gsub(".*:", "",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks` <- gsub("^PPRF", "RF",tb_contact$`No KP Indeks`)
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"NOI/C"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"^KNK"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(tb_contact$`No KP Indeks`!="TIADA" &  tb_contact$`No KP Indeks`!= "TIDAK LENGKAP" & str_detect(tb_contact$`No KP Indeks`,"^[A-z]+$"))] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"TAHUN|THN"))] = "TIDAK LENGKAP"
+
+#11 - remove ID < 5
+tb_contact$`No KP Indeks`[which(str_length(tb_contact$`No KP Indeks`)<=5)] = "TIDAK LENGKAP"
+tb_contact$`No KP Indeks`[which(str_detect(tb_contact$`No KP Indeks`,"^TIADA|NIL")|is.na(tb_contact$`No KP Indeks`))] = "TIDAK LENGKAP"
+
+#Find Kontak which used No KP Indeks as No KP Kontak
+KPIndeks_IDKontak <- tb_contact %>% filter(`Clean No KP`!="TIDAK LENGKAP" & `Clean No KP`==`No KP Indeks`) %>% select(`ID Kontak`,`No Daftar Tibi Daerah`,`Nama Kes Indeks`,`No KP Indeks`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`)
+write_xlsx(KPIndeks_IDKontak,"input/clean_data/TB_contact_IDindeks.xlsx")
+
+#Save all observations in TB contact (which include valid ID, TIDAK LENGKAP & used No KP Indeks). 
+write_csv2(tb_contact,"input/clean_data/TB_contact_all.csv")
+
+complete <- tb_contact %>% filter(`Clean No KP`!="TIDAK LENGKAP" & `Clean No KP`!=`No KP Indeks`)
+arrcomp <- complete %>% arrange(`Clean No KP`)
+#COMPLETE WITH DUPLICATE (Clean No KP)
+write_xlsx(complete,"input/clean_data/TB_contact_COMPLETE.xlsx")
+
+#find duplicate: to verify (exclude TIADA, TIDAK LENGKAP)
+duplicate <- complete[duplicated(complete$`Clean No KP`)|duplicated(complete$`Clean No KP`, fromLast=TRUE),]
+
+arrange_dupe <- arrange(duplicate,`Clean No KP`)
+write_xlsx(arrange_dupe,"input/clean_data/TB_contact_duplicate.xlsx")
+
+#kontak with unique ID
+uniqueID <- complete[!duplicated(complete$`Clean No KP`)&!duplicated(complete$`Clean No KP`, fromLast=TRUE),]
+write_xlsx(uniqueID,"input/clean_data/TB_contact_unique.xlsx")
+
+############################# UNTIL HERE ####################################
+#need verification on duplicate ID
+#after verification - combine unique ID with verified duplicate
+
+
+#to check valid no kp (from arrange_dupenameID)
+#arrange_dupe %>% filter(str_detect(`Clean No KP`,"[0-9]{12}")) %>% select(`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`)
+
+#<---------- CLEANING TB INDEX -------------------->
+
+tb_index <- read_excel("input/clean_data/TB_index.xlsx")
+tb_index <- tb_index %>% mutate_if(is.character, toupper)
+
+colnames(tb_index)[colnames(tb_index) == "No. Pengenalan Diri atau No. Dokumen Perjalanan"] <- "No KP Indeks"
+
+#cleaning space and hyphens
+#2
+tb_index <- mutate(tb_index, "Clean No KP" = gsub("[[:space:]]","",`No KP Indeks`))
+tb_index <- mutate(tb_index, "Clean No KP" = gsub("[-]","",`Clean No KP`))
+
+#8 - detect dates
+dates = "([0-9]{1,2})[:punct:]([0-9]{1,2})[:punct:]([0-9]{4})" # detect dates
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,dates))] = ""
+
+#3
+tb_index$`Clean No KP` <- gsub("^PASSPORT|^PASPORT|^UNHCR|^SB|TIDAK|TIADA|^PAS", "",tb_index$`Clean No KP`)
+
+#7
+tb_index$`Clean No KP` <- gsub("([[:punct:]])","", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\'", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\.", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\*", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\/", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\`", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\,", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\_", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\(PASSPORT\\)", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\(M\\)", "", tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\([0-9a-zA-Z^]+\\)", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\([:alpha:]{4,}$\\)", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("[0-9]\\+", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\(.*\\)", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("\\(.*", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"^12345"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"(\\d)\\1{5,}"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"DOB"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"UNKNOWN"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"TINGKATAN"))] = "TIDAK LENGKAP"
+
+##9 - another cleaning
+tb_index$`Clean No KP` <- gsub(".*:", "",tb_index$`Clean No KP`)
+tb_index$`Clean No KP` <- gsub("^PPRF", "RF",tb_index$`Clean No KP`)
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"NOI/C"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"^KNK"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(tb_index$`Clean No KP`!="TIADA" &  tb_index$`Clean No KP`!= "TIDAK LENGKAP" & str_detect(tb_index$`Clean No KP`,"^[A-z]+$"))] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"TAHUN|THN"))] = "TIDAK LENGKAP"
+
+#11 - remove ID <= 5, contains TIADA or NIL and empty cell
+tb_index$`Clean No KP`[which(str_length(tb_index$`Clean No KP`)<=5)] = "TIDAK LENGKAP"
+tb_index$`Clean No KP`[which(str_detect(tb_index$`Clean No KP`,"^TIADA|NIL")|is.na(tb_index$`Clean No KP`))] = "TIDAK LENGKAP"
+
+##<------- 21 cases of Nama contains special characters or numeric (manually) -------->
+###<---- Nama cannot be changed since it's identical to Nama Kes Indeks in TB_Contact
+tb_index$`Clean No KP`[which(str_detect(tb_index$Nama,"IDNAP423518"))] <- "IDNAP423518"
+tb_index$Nama[which(tb_index$`Clean No KP`=="IDNAP423518")] <- "NURHASNAH"
+
+#Save all observations in for TB Index 
+write_xlsx(tb_index,"input/clean_data/TB_index_all.xlsx")
+
+#exclude tidak lengkap
+complete <- tb_index %>% filter(`Clean No KP`!="TIDAK LENGKAP")
+write_xlsx(complete,"input/clean_data/TB_index_CLEAN.xlsx")
+
+#<------ TO MATCH WHEN CONTACT BECOMES INDEX  ---------->
+#no of observations: unique contact - 681,509
+#no of observations: tb index - 148,681
+#no of observations: duplicate contacs (as of 10 July 19) - 18,3981
+tbc_clean <- read_excel("input/clean_data/TB_contact_unique.xlsx")
+tbi_clean <- read_excel("input/clean_data/TB_index_CLEAN.xlsx")
+tbc_dupe <- read_excel("input/clean_data/TB_contact_duplicate-CLEAN.xlsx",sheet = "completed")
+
+#for cases with "Clean No KP" != "TIADA", "TIDAK LENGKAP" & "NO KP INDEKS"
+#tbi_sub <- tbi_clean %>% select(`ID Pesakit`,`Tarikh Pendaftaran`,Nama,`No KP Indeks`,`Clean No KP`,`Kategori Kes Tibi`,Warganegara,Negeri)
+#tbc_sub <- tbc_clean %>% filter(`Clean No KP`!="TIADA" & `Clean No KP`!="TIDAK LENGKAP") %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+tbc_sub <- tbc_clean %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+
+#matching TB Indeks & TB Kontak (does not include duplicates which need verification)
+#innerjoinDF <- inner_join(tbi_sub,tbc_sub,by="Clean No KP")
+innerjoinDF <- inner_join(tbi_clean,tbc_clean,by="Clean No KP")
+innerjoinDF$`Tarikh Daftar Kes` <- lubridate::dmy(innerjoinDF$`Tarikh Daftar Kes`)
+innerjoinDF$`Tarikh Pendaftaran` <- lubridate::dmy(innerjoinDF$`Tarikh Pendaftaran`)
+arrange_join <- innerjoinDF %>% arrange(`Clean No KP`,`Tarikh Daftar Kes`,`Tarikh Pendaftaran`)
+fwrite_xlsx(arrange_join,"input/clean_data/TBic_unique.xlsx")
+#TBic_unique = 6872 obs
+
+#matching TB indeks & duplicates
+#tbcdupe_sub <- tbc_dupe  %>% select(`ID Kontak`,`Tarikh Daftar Kes`,`Nama Kontak`,`No Kad Pengenalan`,`Clean No KP`,`Nama Kes Indeks`,`No KP Indeks`)
+innerjoinDF <- inner_join(tbi_sub,tbcdupe_sub,by="Clean No KP")
+innerjoinDF$`Tarikh Daftar Kes` <- lubridate::dmy(innerjoinDF$`Tarikh Daftar Kes`)
+innerjoinDF$`Tarikh Pendaftaran` <- lubridate::dmy(innerjoinDF$`Tarikh Pendaftaran`)
+dupe_join <- innerjoinDF %>% arrange(`Clean No KP`,`Tarikh Pendaftaran`)
+write_xlsx(dupe_join,"input/clean_data/TBic_dupe.xlsx")
+#rm(list=ls())

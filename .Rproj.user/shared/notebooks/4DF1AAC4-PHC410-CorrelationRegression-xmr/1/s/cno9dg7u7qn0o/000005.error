@@ -1,0 +1,1 @@
+{"frames":[{"character_number":0,"end_character_number":0,"end_line_number":0,"file":"","func":"ggplot(df1, aes(`Weight (kg)`, `SBP (mmHg)`))","line_number":0}],"message":"Error in ggplot(df1, aes(`Weight (kg)`, `SBP (mmHg)`)) : \n  object 'df1' not found\n"}

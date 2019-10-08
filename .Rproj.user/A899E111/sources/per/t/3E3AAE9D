@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1567832934226.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3E3AAE9D",
+    "lastKnownWriteTime" : 4324474624,
+    "last_content_update" : 1567832934226,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "BA27E24A",
+        "caption" : "tbc_2013v2",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=tbc_2013v2&cache_key=BA27E24A",
+        "displayedObservations" : "243",
+        "environment" : "",
+        "object" : "tbc_2013v2",
+        "preview" : "0",
+        "totalObservations" : "243",
+        "variables" : "57"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>PHARMACEUTICAL BIOSTATISTICS (PHC410)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Yuslina Zakaria" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# PHARMACEUTICAL BIOSTATISTICS (PHC410)
+## Correlation and Regression
+### Dr Yuslina Zakaria
+### Faculty of Pharmacy, UiTM Selangor
+### Oct 9, 2019<br>Updated: Oct 5, 2019
+
+---
+
+
+# Learning Outcomes
+
+At the end of this lesson, students should be able to:
+
+1. interpret **scatterplots**.
+
+1. differentiate between **correlation** and **regression**.
+
+1. evaluate and interpret the **Pearson’s** and **Spearman’s rank correlation coefficient**.
+
+1. evaluate the **significance of correlation coefficient**.
+
+1. formulate the **regression equations** and explain about the **variation of regression lines**.
+
+1. calculate and interpret **coefficient and determination**.
+
+
+&lt;img src="figure/correlationimage.png" width="30%" style="display: block; margin: auto 0 auto auto;" /&gt;
+
+---
+
+# Statistical Analysis (Example)
+
+In a study conducted in Australia, 5 patients with hypertriglyceridemia were placed on a low-fat, high-carbohydrate diet. Before the start of the diet, cholesterol and triglyceride measurements were recorded for each subject. 
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Patients &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Cholesterol Level (mmol/l) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Triglyceride Level (mmol/l) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #9CCFF33 !important;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #9CCFF33 !important;"&gt; 5.12 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #9CCFF33 !important;"&gt; 2.30 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.18 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.77 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.95 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3.77 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.36 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.18 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+1. Sketch a scatterplot
+2. Is there a correlation between cholesterol and triglyceride levels?Justify your answer.
+3. Assume that the data is not normally distributed, calculate the correlation coefficient.
+4. Is the correlation significant at 0.05 level of significance? At 0.01?
+5. What is the triglyceride level if patient XYZ has cholesterol level of 10.5?
+6. Find and interpret the coefficient of determination.
+---
+
+
+# Outlines
+
+
+- Bivariate Data
+
+- Scatterplots
+
+- Correlation VS Regression
+
+- Simple Linear Correlation
+
+  - Linear Correlation Coefficient
+  - Pearson's Product Moment Correlation Coefficient, _r_
+  - Spearman's Rank Correlation Coefficient, _r&lt;sub&gt;s&lt;/sub&gt;_
+  - Testing the Significance of Correlation
+  
+- Simple Linear Regression
+
+  - The Least Square Regression
+
+- Coefficient of Determination, _R&lt;sup&gt;2&lt;/sup&gt;_
+---
+
+class: inverse, center, middle
+
+# BIVARIATE DATA
+
+---
+
+# Bivariate Data
+
+- Two selected random variables recorded from each sampling unit
+  - Abundance of a _plant species_ and _soil pH_ from each of several sampled plots
+  - _Blood pressure_ and _body weight_ from patients
+
+- During correlation analysis, the relationship between two continuous variables is described.
+
+- Use that relationship as a basis for prediction.
+
+- Multivariate data – when more than two variables recorded from one sampling unit.
+---
+
+class: inverse, center, middle
+
+# SCATTERPLOTS
+
+---
+
+# Scatterplots
+
+.pull-left[
+- A graph in which the paired (x,y) sample data are plotted with horizontal x-axis and
+a vertical y-axis.
+
+- Each individual (x,y) pair is plotted as a single point.
+
+- Scatterplots are created by setting up two continuous axes, then creating a dot for
+every pair of observations.
+
+]
+.pull-right[
+![](PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-3-1.svg)&lt;!-- --&gt;
+]
+---
+
+# Scatterplots (example)
+
+- Weight and systolic blood pressure of 10 patients.
+
+.pull-left[
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Weight (kg) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; SBP (mmHg) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 67 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 120 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 69 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 125 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 83 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 160 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 130 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 81 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 180 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 97 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 150 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 92 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 130 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+![](PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+---
+
+# Scatterplots Interpretation
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="figure/sc1.png" alt="*slope depicts the direction, amount of scatter depicts the strength" width="35%" height="18%" /&gt;&lt;img src="figure/sc2.png" alt="*slope depicts the direction, amount of scatter depicts the strength" width="35%" height="18%" /&gt;&lt;img src="figure/sc3.png" alt="*slope depicts the direction, amount of scatter depicts the strength" width="35%" height="18%" /&gt;
+&lt;p class="caption"&gt;*slope depicts the direction, amount of scatter depicts the strength&lt;/p&gt;
+&lt;/div&gt;
+
+
+
+
+---
+
+class: inverse, center, middle
+
+# CORRELATION VS REGRESSION
+
+---
+
+# Correlation Analysis
+
+.pull-left[
+- Correlation is concerned with measuring **strength** (degree of association) and **direction**
+(positive or negative) of the relationship between variables.
+
+- No hypothesised cause and effect relationship between variables.
+
+- It does not matter which variable is on the x- or y-axis.
+]
+
+.pull-right[
+![](PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+]
+---
+
+# Regression Analysis
+
+.pull-left[
+- Regression analysis is helpful in assessing specific forms of the relationship between variables. 
+
+- The ultimate objective is to **predict** or **estimate** the value of one variable corresponding to a given value of another variable.
+
+- Causal relationship is believed to exist.
+
+- Potential response variable (dependent) on yaxis; explanatory or predictor variable
+(independent) on x-axis.
+]
+
+.pull-right[
+![](PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+]
+
+---
+
+class: inverse, center, middle
+
+# SIMPLE LINEAR CORRELATION
+
+---
+
+# Correlation
+
+- A *correlation* is a relationship between two variables.
+
+- The data can be represented by the ordered pairs (x, y) where **x is usually the independent (or explanatory)** variable, and **y is the dependent (or response) variable**.
+
+- A scatterplot is used to determine whether a linear (straight line) correlation exists between two variables.
+
+.pull-left[
+
+&lt;table style="height:30%; width: auto !important; margin-left: auto; margin-right: auto;" class="table table-striped"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Weight (kg) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; SBP (mmHg) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 67 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 120 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 69 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 125 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 83 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 160 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 130 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 81 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 180 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 97 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 150 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 92 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 200 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 130 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+.pull-right[
+![](PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+# Correlation Analysis
+
+- If we are interested only in determining whether a relationship exists, we employ correlation analysis.
+
+- No distinction between explanatory (x) and response (y) variable.
+
+- Requires both variables to be quantitative or continuous variables (no categorical or nominal variables).
+
+- Both variables must be normally distributed. If one or both are not, either transform the variables to near normality or use an alternative non-parametric test of Spearman.
+
+---
+
+# Interpreting Correlation (Strength)
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="figure/correlationsc.jpg" alt="Correlation scatter plots between two variables. Image credit: Yadav Suniti (2018)" width="70%" /&gt;
+&lt;p class="caption"&gt;Correlation scatter plots between two variables. Image credit: Yadav Suniti (2018)&lt;/p&gt;
+&lt;/div&gt;
+---
+
+# Interpreting Correlation (Direction)
+## Positive Correlation
+
+.pull-left[
+- The values of the two variables (x,y) **deviate in the same direction**.
+
+- i.e. if an increase (or decrease) in the values of one variable results on an average, in a corresponding increase (or decrease) in the values of the other variable.
+]
+
+.pull-right[
+&lt;img src="figure/pos-corr.png" width="667" /&gt;
+]
+---
+# Positive Correlation (Example)
+
+1. Education level and salary potential.
+
+2. People suffer from depression and suicidal
+tendencies.
+
+3. Household income and expenditure.
+
+- In statistics, a perfect positive correlation is represented by the value of +1.00.
+
+- The points lie close to a straight line, which has a positive gradient or direction.
+
+---
+
+# Interpreting Correlation (Direction)
+## Negative Correlation
+
+.pull-left[
+
+- The values of the two variables (x,y) **deviate in opposite direction.**
+
+- i.e. if an increase (or decrease) in the values of one variable results in an average, in corresponding decrease (or increase) in the values of the other
+variable.
+]
+
+.pull-right[
+&lt;img src="figure/neg-corr.png" width="667" /&gt;
+]
+---
+# Negative Correlation (Example)
+
+1. Price and demand of goods.
+
+2. Depression and self esteem.
+
+3. Amount of exercises and percentage of body
+fat.
+
+- In statistics, a perfect negative correlation is represented by the value of -1.00.
+---
+# Interpreting Correlation (Direction)
+
+&lt;img src="PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+# Linear Correlation Coefficient
+
+---
+
+# Linear Correlation Coefficient, *r*
+
+- The linear correlation coefficient is a measure of the **strength** and the **direction** of a linear relationship between two variables. 
+
+- The symbol *r* represents the sample correlation coefficient. 
+
+- Like the mean and SD, *r* is strongly affected by outliers and sample size.
+
+- The formula for *r* is
+
+`$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$`
+
+- *r* does not measure nor describe curved or non-linear association no matter how strong.
+
+---
+
+# Linear Correlation Coefficient, *r*
+
+- Unit-less and always between –1 and 1
+
+- The closer to 1, the **stronger the positive linear relationship** (+*r*)
+
+- The closer to –1, the **stronger the negative linear relationship** (-*r*)
+
+- The closer to 0, the **weaker any positive/negative linear relationship**
+
+- Equals 0, **no linear relationship exists**
+
+- The extreme values +1 and -1 indicate **perfect linear relationship** (points lie exactly along a straight line)
+
+---
+
+# Linear Correlation Coefficient, *r*
+&lt;img src="figure/r-scale.png" width="640" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Linear Correlation Coefficient, *r*
+&lt;img src="figure/r-scale2.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle
+
+# Pearson's Product Moment Correlation Coefficient, _r_
+
+---
+# Pearson's Correlation Coefficient
+
+- The most popular correlation coefficient.
+
+- Used to determine the correlation between two variables under three conditions:
+
+  1. Both variables must be **interval or ratio** measures.
+  2. The relationship between the two variables **must be linear**.
+  3. Both variables are **normally distributed**.
+
+- Should use a large scale for variables (larger sample size) in this analysis.
+---
+# Pearson's Correlation Coefficient
+## Calculation of *r*
+&lt;ol&gt;
+&lt;li&gt; Find `\(n\)`.
+&lt;li&gt; Sum all the X-values. `\(\sum{X}\)`
+
+&lt;li&gt; Sum all the Y-values. `\(\sum{Y}\)`
+
+&lt;li&gt; Square each X-value and find the sum. `\(\sum{X}^2\)`
+
+&lt;li&gt; Square each Y-value and find the sum. `\(\sum{Y}^2\)`
+
+&lt;li&gt; Multiply each X-value by its corresponding Y-value. Find the sum. `\(\sum{XY}\)`
+
+&lt;li&gt; Use these `\(n\)` and five sums to calculate the coefficient, r
+&lt;/ol&gt;
+`$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$`
+
+---
+
+# Pearson's Correlation Coefficient
+## Example 1
+
+The age *X* in months and vocabulary *Y* were measured for six children, with the results shown in the table. Calculate the correlation coefficient, r for the following data. Interpret the result.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Child &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Age &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Vocabulary &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 13 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 27 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 30 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+# Pearson's Correlation Coefficient
+## Example 1
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Child &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Age (X) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Vocabulary (Y) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; X&lt;sup&gt;2&lt;/sup&gt; &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Y&lt;sup&gt;2&lt;/sup&gt; &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; XY &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 13 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 169 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 64 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 104 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 196 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 225 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 225 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 225 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 256 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 400 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 320 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 27 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 256 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 729 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 432 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 30 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 324 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 900 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 540 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 92 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 1426 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 2498 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 5em; font-weight: bold;background-color: #99CCFF !important;"&gt; 1813 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+`$$\small n=6, \sum{X}=92, \sum{Y}=114, \sum{X}^2=1426, \sum{Y}^2=2498, \sum{XY}=1813$$`
+---
+
+# Pearson's Correlation Coefficient
+`$$\small n=6, \sum{X}=92, \sum{Y}=114, \sum{X}^2=1426, \sum{Y}^2=2498, \sum{XY}=1813$$`
+Substitute the formula with the values:
+`$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$`
+`$$=\frac{6(1813)-(92)(114)}{\sqrt{[6(1426)-(92)^2][6(2498)-(114)^2]}}$$`
+`$$r=\frac{10878-10488}{\sqrt{[8556-8464][14988-12996]}}=\frac{390}{\sqrt{[92][1992]}}=\frac{390}{428.09}\approx0.91$$`
+
+Interpretation: There is a **strong positive** linear correlation **between the age(*X*) in months** and **vocabulary(*Y*)** in six children. As the age of children increases, the number of vocabulary increases.
+---
+
+# Pearson's Correlation Coefficient
+## Example 2
+
+The following data represents the number of hours 12 different students watched television during the weekend and the scores of each student who took a test the following Monday.
+
+  a) Display the scatter plot.
+  
+  b) Calculate and interpret the correlation coefficient, *r*.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 5 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 6 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 7 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 8 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 9 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 10 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 11 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 12 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hours (X) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Test score (Y) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 96 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 68 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 50 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+
+# Pearson's Correlation Coefficient
+## Example 2 (Solution)
+
+  a) Display the scatter plot.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 5 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 6 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 7 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 8 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 9 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 10 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 11 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 12 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hours (X) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Test score (Y) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 96 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 68 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 50 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;img src="PHC410-CorrelationRegression-xmr_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+# Pearson's Correlation Coefficient 
+## Example 2 (Solution)
+
+  b) Calculate and interpret the correlation coefficient, *r*.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 5 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 6 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 7 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 8 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 9 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 10 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 11 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 12 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hours (X) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Test score (X) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 96 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 68 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 50 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;background-color: #99CCFF !important;"&gt; X&lt;sup&gt;2&lt;/sup&gt; &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 25 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 49 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 49 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;background-color: #99CCFF !important;"&gt; Y&lt;sup&gt;2&lt;/sup&gt; &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 9216 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 7225 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 6724 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 5476 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 9025 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4624 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 5776 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 7056 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 3364 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4225 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 5625 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 2500 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;background-color: #99CCFF !important;"&gt; XY &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 164 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 222 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 285 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 340 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 380 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 420 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 348 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 455 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 525 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 500 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+`$$\small n=12, \sum{X}=54, \sum{Y}=908, \sum{X}^2=332, \sum{Y}^2=70836, \sum{XY}=3724$$`
+---
+
+# Pearson's Correlation Coefficient
+## Example 2 (Solution)
+
+  b) Calculate and interpret the correlation coefficient, *r*.
+`$$\small n=12, \sum{X}=54, \sum{Y}=908, \sum{X}^2=332, \sum{Y}^2=70836, \sum{XY}=3724$$`
+Substitute the formula with the values:
+`$$r=\frac{n\sum{XY}-\sum(X)\sum(Y)}{\sqrt{[n\sum{X}^2-(\sum{X})^2][n\sum{Y}^2-(\sum{Y})^2]}}$$`
+`$$r=\frac{12(3724)-(54)(908)}{\sqrt{[12(332)-(54)^2][12(70836)-(908)^2]}}\approx-0.83$$`
+Interpretation: There is a **strong negative** linear correlation between **the number of hours spent watching TV** and **the test scores** in 12 students. As the hours watching TV increases, the test score decreases.
+
+---
+
+class: center, middle
+
+# Spearman's Rank Correlation Coefficient
+
+---
+
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+- Spearman’s yield a correlation coefficient between two ordinal, or ranked variables.
+
+- The formula is `$$r_s = 1 - \frac{6\sum{D}^2}{n(n^2-1)}$$`
+where *D* is the difference between paired ranks. The number **6** is a constant.
+
+- For each case that is observed, the rank of the case for each of the variables X and Y is determined by **ordering values from low to high**, or **from high to low**.
+
+---
+
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+## Example
+
+**Ten countries** were randomly selected from the list of 129 countries. The countries are compared with respect to their **gross national income per capita (GNP)**, an indicator of the average income level of each country. Researcher have found that **people in countries with higher income levels tend to live longer** than do
+people in countries with lower income levels. In addition, **birth rates tend to be higher in countries with lower incomes**, with birth rates declining as countries become better off economically.
+
+The following table gives the **mean life expectancy (LE)** for the 10 countries, and the **crude birth rate (CBR)** for each country.
+
+---
+
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+## Example
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Country &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LE &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Algeria &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2360 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 34 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 340 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 59 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Mongolia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 780 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 62 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; El Salvador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 64 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Equador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1120 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 66 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Malaysia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Ireland &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7750 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Argentina &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2520 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 71 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 21 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; France &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16090 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Sierra Leone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 240 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 47 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 48 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: center, middle
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+## Question
+
+Use the data to determine the Spearman's rank correlation of GNP with the
+
+  (i) life expectancy (LE)
+  
+  (ii) crude birth rate (CBR)
+
+---
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+## Solution Steps:
+
+1. Determine the ranking for each country with respect to each of the social indicators. Rank them separately. Choose either *high to low* or *low to high*.
+
+  i. GNP is ranked from high to low (France is ranked first).
+  
+  ii. Rank countries with respect to their level of LE (France is ranked first). 
+
+  iii. Where cases are tied, the ranks which would otherwise occur are averaged. (Malaysia and Ireland) – ((2+3)/2=2.5).
+
+  iv. In order to be consistent, birth rates (CBR) is ranked from high to low as well (Sierra Leone ranks first).
+  
+2. Calculate and square the difference.
+
+---
+
+## Step 1: Rank GNP, LE and CBR separately.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Country &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LE &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LE (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR (Rank) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Algeria &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2360 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 34 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 6.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 4.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 340 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 59 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 9.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 7.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Mongolia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 780 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 62 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 8.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; El Salvador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 64 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 7.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Equador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1120 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 66 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Malaysia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Ireland &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7750 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 9.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Argentina &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2520 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 71 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 4.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 8.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; France &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16090 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 10.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Sierra Leone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 240 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 47 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 48 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 10.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 1.0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+## Step 2: Calculate and square the difference (GNP with Life Expectancy (LE))
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Country &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; LE (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; D&lt;sub&gt;i&lt;/sub&gt; &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Squared Difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Algeria &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -2.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Mongolia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 8.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; El Salvador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Equador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 1.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Malaysia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 6.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Ireland &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -0.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Argentina &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -1.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 1.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; France &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Sierra Leone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+### GNP with Life Expectancy (LE)
+
+Total of squared difference `\(\sum{D_i}^2\)` = 12.5
+
+Using the Spearman's rank formula `\(r_s = 1 - \frac{6\sum{D}^2}{n(n^2-1)}\)`
+
+The value of Spearman's rank correlation coefficient `\(r_s\)` is
+
+`$$r_s = 1 - \frac{6(12.50)}{10(10^2-1)}=0.92$$`
+The correlation between GNP and LE is represented by 0.92.
+
+Conclusion: There is a strong positive correlation between the gross national product (GNP) and life expectancy (LE) rate of the countries observed. As the GNP increases, the LE increases.
+
+---
+
+# Spearman's Rank Correlation Coefficient, r&lt;sub&gt;s&lt;/sub&gt;
+
+Proceed with the second part of the question, find the relationship between the GNP and the crude birth rate (CBR).
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Country &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR (Rank) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Algeria &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2360 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 34 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 4.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 340 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 31 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 7.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Mongolia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 780 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; El Salvador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Equador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1120 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Malaysia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1940 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 5.5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Ireland &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7750 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 9.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Argentina &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2520 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 21 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 8.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; France &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16090 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 10.0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Sierra Leone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 240 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 48 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #FFCC00 !important;"&gt; 1.0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+## Step 2: Calculate and square the difference (GNP with Life Expectancy (LE))
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Country &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; GNP (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; CBR (Rank) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; D&lt;sub&gt;i&lt;/sub&gt; &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Squared Difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Algeria &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 2.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Mongolia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 30.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; El Salvador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 4.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 20.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Equador &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Malaysia &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -0.5 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 0.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Ireland &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -7.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 49.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Argentina &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 8.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -5.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 25.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; France &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; -9.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 81.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 10em; "&gt; Sierra Leone &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 9.0 &lt;/td&gt;
+   &lt;td style="text-align:center;font-weight: bold;background-color: #99CCFF !important;"&gt; 81.00 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### GNP with Crude Birth Rate (CBR)
+
+Total of squared difference `\(\sum{D_i}^2\)` = 291.00
+
+Using the Spearman's rank formula `\(r_s = 1 - \frac{6\sum{D}^2}{n(n^2-1)}\)`
+
+The value of Spearman's rank correlation coefficient `\(r_s\)` is
+
+`$$r_s = 1 - \frac{6(291.00)}{10(10^2-1)}=-0.76$$`
+
+The correlation between GNP and LE is represented by -0.76.
+
+Conclusion: There is a moderate negative correlation between the gross national product (GNP) and crude birth rate (CBR) of the countries observed. As the GNP increases, the crude birth rate decreases.
+
+---
+class: center, middle
+
+# Testing the Significance of Correlation Coefficient
+
+---
+
+# Testing the Significance of Correlation Coefficient
+
+- We perform a hypothesis test of the "significance of the correlation coefficient" to decide whether the linear relationship in the sample data is strong enough to use to model the relationship in the population.
+
+- The hypothesis test lets us decide whether the value of the population correlation coefficient ρ is "close to 0" or "significantly different from 0". We decide this based on the sample correlation coefficient *r* and the sample size *n*.
+
+- Hypothesis test for the Spearman’s correlation coefficient is the same as the
+Pearson’s *r* by using Table Critical Value of Spearman's Rank . Pearson's critical value can be retrieved from Table Critical Value of Pearson's Correlation Coefficient.
+
+---
+# Testing the Significance of Correlation Coefficient
+
+## Conclusion (Significant)
+
+- If |r| is greater than the critical value, reject the null hypothesis -&gt; significant correlation
+
+- If the test concludes that the correlation coefficient is significantly different from 0, we say that the correlation coefficient is "significant".
+
+- Conclusion: "There is sufficient evidence to conclude that there is a significant linear correlation between x and y because the correlation coefficient is significantly different from 0."
+
+- What the conclusion means: There is a significant linear correlation between 
+x and y. We **CAN** use the regression line to model the linear relationship between 
+x and y in the population.
+
+---
+# Testing the Significance of Correlation Coefficient
+
+## Conclusion (Not Significant)
+
+- If |r| is smaller than the critical value, fail to reject the null hypothesis -&gt; no significant correlation.
+
+- If the test concludes that the correlation coefficient is not significantly different from 0 (it is close to 0), we say that correlation coefficient is "not significant".
+
+- Conclusion: "There is insufficient evidence to conclude that there is a significant linear correlation between x and y because the correlation coefficient is not significantly different from 0."
+
+- What the conclusion means: There is not a significant linear correlation between 
+x and y. Therefore we **CANNOT** use the regression line to model a linear relationship between x and y in the population.
+
+---
+# Testing the Significance of Correlation Coefficient
+
+## Performing Test (Hypotheses)
+
+- Null hypothesis: There is no significant linear correlation between the two variables. `\(H_{0}: ρ = 0\)`.
+
+- Alternative hypothesis: There is a significant linear correlation between the two variables. `\(H_{1}: ρ \neq 0\)`.
+
+---
+
+# Performing Test (Hypotheses)
+
+## Example 2
+
+Data represents the number of hours 12 different students watched television during the weekend and the scores of each student who took a test the following Monday. 
+
+The correlation coefficient, *r* `\(\approx-0.83.\)` Is the correlation significant at the 0.05 level of significance?
+
+`$$r\approx-0.83, df=n-2=10, \alpha=0.05$$`
+
+---
+# Performing Test (Hypotheses)
+
+## Example 2
+
+`$$r\approx-0.83, df=n-2=10, \alpha=0.05$$`
+
+From the table, use `\(df=10\)` and `\(\alpha=0.05\)`
+
+&lt;img src="figure/pearsontab.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Performing Test (Hypotheses)
+
+## Example 2
+
+Critical value = 0.576, `\(r\approx-0.83\)`
+
+- |r| is greater than the critical value, we reject the null hypothesis.
+
+Conclusion: There is sufficient evidence to conclude that there is a significant linear correlation between the hours spent watching TV and the test score because the correlation coefficient is significantly different from 0.
+
+---
+
+## Simple Linear Correlation
+
+### Limitation
+
+- Just because two variables are highly correlated does not mean that one causes the other.
+
+  - Ice cream sales and the number of shark attacks on swimmers are correlated.
+  
+  - The number of cavities in primary school children and vocabulary size have a strong positive correlation.
+  
+- Though r measures how close the two variables approximate a straight line, it does not validly measures the strength of nonlinear relationship.
+
+- When the sample size, n is small we also have to be careful with the reliability of the correlation.
+
+- Outliers could have a marked effect on r.
+
+---
+
+class: inverse, center, middle
+
+# SIMPLE LINEAR REGRESSION
+
+---
+# SIMPLE LINEAR REGRESSION
+## Residuals
+
+- After verifying that the linear correlation between two variables is significant,
+next we **determine the equation of the line** that can be used to predict the
+value of y for a given value of x.
+
+&lt;img src="figure/residuals.png" width="1612" style="display: block; margin: auto;" /&gt;
+- Each data point `\(d_i\)` represents the difference between the observed y-value and the
+predicted y-value for a given x-value on the line. These differences are called **residuals**.
+---
+
+# Simple Linear Regression
+
+- Simple regression analysis is predicting one variable Y, in terms of the other X.
+
+  - Variable being predicted (Y) is called the **dependent variable**.
+  
+  - Variable used to make prediction (X) is and **independent variable**.
+
+---
+# Simple Linear Regression
+
+## Basic Assumptions
+
+1. Values of the independent variable X are said to be "fixed". The Y values are statistically independent.
+
+2. The variable X is measured without error.
+
+3. For each value of X there is a subpopulation of Y values. Residuals must be normally distributed.
+
+4. The variances of the subpopulations of Y are all equal (homoscedasticity) and denoted by σ2.
+
+5. The means of the subpopulations of Y all lie on the same straight line (linearity assumption).
+
+6. When the data are time series, the errors often are correlated. Error terms that are correlated over time are said to be autocorrelated or serially correlated. For linear regression, the data should not be autocorrelated.
+
+
+---
+class: center, middle
+
+# The Least Squares Regression
+
+---
+
+# The Least Squares Regression
+
+- The method commonly employed for obtaining the best desired line.
+
+- General equation of a straight line.
+
+$$y = mx + b $$
+
+where,
+    - y is value on the vertical axis
+    - x is a value on the horizontal axis
+    - b is the point where the line crosses the vertical axis (y-intercept)
+    - m shows the amount by which y changes for each unit change in x (slope).
+
+
+---
+
+# The Least Squares Regression
+
+The objective of the least-squares regression is to **minimise the sum of the square of the
+errors of the data points** (actual and predicted values).
+
+&lt;img src="figure/leastsquare.png" width="435" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The Least Squares Regression Line
+
+- A regression line, also called a line of best fit, is the line for which the sum of the squares of the residuals is a minimum.
+
+- The equation of a regression line of x and y is given by
+
+`$$\hat{y} = mx + b$$`
+
+where `\(\hat{y}\)` is the predicted y-value for a given x-value. The slope `\(m\)` and y-intercept `\(b\)` are given by
+
+$$ m = \frac{n\sum{xy}-(\sum{x})(\sum{y})}{n\sum{x}^2-(\sum{x}^2)}$$
+$$ b = \bar{y}-m\bar{x} = \frac{\sum{y}}{n}-m\frac{\sum{x}}{n}$$
+
+where `\(\bar{y}\)` is the mean of y-values and `\(\bar{x}\)` is the mean of x-values. 
+
+- The regression line always passes through `\((\bar{x},\bar{y})\)`.
+
+---
+
+# Least Squares Regression
+
+## Using Example 2 (from topic of Correlation)
+
+The following data represents the number of hours 12 different students watched television during the weekend and the scores of each student who took a test the following Monday.
+
+  a) Find the equation of regression line.
+  
+  b) Use the equation to find the expected test score for a student who watches 9 hours of TV.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 4 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 5 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 6 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 7 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 8 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 9 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 10 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 11 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; 12 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Hours (X) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Test score (Y) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 96 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 74 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 68 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 50 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Least Squares Regression
+
+## Using previous solution
+
+`$$n=12, \sum{X}=54, \sum{Y}=908$$`
+`$$\sum{X}^2=332, \sum{Y}^2=70836, \sum{XY}=3724$$`
+
+1. Calculate `\(m\)`
+$$ m = \frac{n\sum{xy}-(\sum{x})(\sum{y})}{n\sum{x}^2-(\sum{x}^2)} = \frac{12(3724)-(54)(908)}{12(332)-(54^2)}\approx-4.067 $$
+
+2. Calculate `\(b\)`
+$$ b = \bar{y}-m\bar{x} = \frac{\sum{y}}{n}-m\frac{\sum{x}}{n} = \frac{908}{12}-(-4.067)\frac{54}{12}\approx93.97$$
+
+3. The regression line of `\(\hat{y} = mx + b\)` is `$$\hat{y} = -0.47x + 93.97$$`
+
+---
+
+# Least Squares Regression
+
+## The plot
+
+&lt;img src="figure/reg-eg2.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Least Squares Regression
+
+b) Use the equation to find the expected test score for a student who watches 9 hours of TV.
+
+From (a), we get the equation of regression line 
+`$$\hat{y} = -0.47x + 93.97$$`
+
+For 9 hours of watching TV, substitute `\(x\)` in the equation with **9** 
+`$$\hat{y} = -0.47(9) + 93.97$$`
+`$$\hat{y} = 57.34$$`
+
+Conclusion: A student who watches 9 hours of TV over the weekend can expect to
+receive about a 57.34 on Monday’s test.
+
+---
+class: inverse, center, middle
+
+# COEFFICIENT OF DETERMINATION
+
+---
+# Coefficient of Determination, *R&lt;sup&gt;2&lt;/sup&gt;*
+
+- Measures how close the data to the regression line.
+
+- *R&lt;sup&gt;2&lt;/sup&gt;* varies from 0 to 1.
+
+- The coefficient of determination *R&lt;sup&gt;2&lt;/sup&gt;* is the ratio of the explained
+variation to the total variation. That is,
+
+`$$R^2 = \frac{Explained Variation}{Total Variation}$$`
+
+- The proportion of variation in dependent variable *Y* which can be explained by the variation in the independent variable *X*
+
+---
+# Coefficient of Determination
+
+## Example 2
+
+The correlation coefficient for the data that represents the number of hours students watched television and the test scores of each student is `\(r\approx-0.83\)`. Find the coefficient of
+determination.
+
+$$R^2 \approx (-0.83)^2 \approx 0.689 $$
+
+Interpretation: About **68.9% of the variation in the test scores** can be explained by the **variation in the hours of TV watched**. **31.1% of the variation is unexplained** or due to other factors.
+---
+
+# Learning Outcomes
+
+## Now you should be able to:
+
+1. interpret **scatterplots**.
+
+1. differentiate between **correlation** and **regression**.
+
+1. evaluate and interpret the **Pearson’s** and **Spearman’s rank correlation coefficient**.
+
+1. evaluate the **significance of correlation coefficient**.
+
+1. formulate the **regression equations** and explain about the **variation of regression lines**.
+
+1. calculate and interpret **coefficient and determination**.
+
+
+---
+# References
+
+
+- 
+&lt;p&gt;&lt;cite&gt;Allaire, J, Y. Xie, J. McPherson, et al.
+(2019).
+&lt;em&gt;rmarkdown: Dynamic Documents for R&lt;/em&gt;.
+R package version 1.15.
+URL: &lt;a href="https://CRAN.R-project.org/package=rmarkdown"&gt;https://CRAN.R-project.org/package=rmarkdown&lt;/a&gt;.&lt;/cite&gt;&lt;/p&gt;
+
+
+---
+
+class: center, middle
+
+# Thanks!
+
+Download statistical tables at http://bit.ly/2MpUvZz.
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

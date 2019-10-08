@@ -1,0 +1,4 @@
+"0","ggplot(df1,aes(`Weight (kg)`,`SBP (mmHg)`))+geom_point(aes(color=""firebrick"",size=0.1))+ xlab(""Weight (kg)"")+ylab(""SBP (mmHg)"")+ggtitle(""Scatterplot of Weight VS SBP"")+ theme(plot.title = element_text(hjust = 0.5,size=12,face=""bold""),axis.title.x = element_text(size=10, face=""bold""), axis.title.y = element_text(size=10, face=""bold""), legend.position = ""none"")"
+"2","Error in ggplot(df1, aes(`Weight (kg)`, `SBP (mmHg)`)) : 
+  object 'df1' not found
+"
