@@ -3,7 +3,7 @@ title: "PHARMACEUTICAL BIOSTATISTICS (PHC410)"
 subtitle: "Correlation and Regression"
 author: "Dr Yuslina Zakaria"
 institute: "Faculty of Pharmacy, UiTM Selangor"
-date: "`r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`<br>Updated: Oct 5, 2019"
+date: "Oct 9, 2019<br>Updated: `r gsub(' 0', ' ', format(Sys.Date(), format='%b %d, %Y'))`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
