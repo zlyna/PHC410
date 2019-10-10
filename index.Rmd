@@ -39,7 +39,7 @@ At the end of this lesson, students should be able to:
 
 1. formulate the **regression equations** 
 
-1. explain about the **variation of regression lines** using **coefficient and determination**.
+1. explain about the **proportion of variation in dependent variable** using **coefficient of determination**.
 
 
 ```{r echo=FALSE,fig.align='right',out.width="30%"}
@@ -1045,7 +1045,7 @@ Interpretation: About **68.9% of the variation in the test scores** can be expla
 
 1. formulate the **regression equations** 
 
-1. explain about the **variation of regression lines** using **coefficient and determination**.
+1. explain about the **proportion of variation in dependent variable** using **coefficient of determination**.
 
 
 ---
