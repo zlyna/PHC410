@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572635723991.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2713793178",
+    "id" : "FCCD9290",
+    "lastKnownWriteTime" : 1572651868,
+    "last_content_update" : 1572651868618,
+    "path" : "C:/Users/linaz/Dropbox/Slides/PHC410-DataAnalyticsUsingR/PHC410-DataAnalyticsUsingR.Rmd",
+    "project_path" : "PHC410-DataAnalyticsUsingR/PHC410-DataAnalyticsUsingR.Rmd",
+    "properties" : {
+        "cursorPosition" : "6,3",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

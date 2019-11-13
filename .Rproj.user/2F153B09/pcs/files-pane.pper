@@ -1,8 +1,12 @@
 {
-    "path" : "C:/Users/Ahmad Adizul/Dropbox/2019-Documents/Courses/PHC410/PHC410-slides/Slides",
+    "path" : "C:/Users/Ahmad Adizul/Dropbox/Slides/figure",
     "sortOrder" : [
         {
-            "ascending" : true,
+            "ascending" : false,
+            "columnIndex" : 4
+        },
+        {
+            "ascending" : false,
             "columnIndex" : 2
         }
     ]

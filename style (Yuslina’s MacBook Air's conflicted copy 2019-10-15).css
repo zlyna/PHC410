@@ -1,0 +1,40 @@
+.gdbar img {
+  width: 300px !important;
+  height: 120px !important;
+  margin: 8px 8px !important;
+}
+
+.gdbar {
+  width: 400px !important;
+  height: 140px !important;
+}
+slides > slide:not(.nobackground):before {
+  width: 150px;
+  height: 65px;
+  background-size: 150px 65px;
+}
+slides > slide.title-slide p {
+  font-size: 30px;
+  color: DarkRed;
+}
+body p {
+  color: #000000;
+}
+.title-slide hgroup h1 {
+  font-size: 45px;
+  font-style: bold;
+  letter-spacing: 0;
+}
+h1 { /* Header 1 */
+font-size: 30px;
+color: DarkBlue;
+}
+h2 { /* Header 2 */
+font-size: 38px;
+color: DarkBlue;
+}
+h3 { /* Header 3 */
+font-size: 18px;
+font-family: "Times New Roman", Times, serif;
+color: DarkBlue;
+}

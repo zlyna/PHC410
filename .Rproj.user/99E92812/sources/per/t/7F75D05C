@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572643820209.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7F75D05C",
+    "lastKnownWriteTime" : 2907758619528,
+    "last_content_update" : 1572643820209,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "AB4E682A",
+        "caption" : "menrot_hist_correct",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=menrot_hist_correct&cache_key=AB4E682A",
+        "displayedObservations" : 54,
+        "environment" : "",
+        "expression" : "menrot_hist_correct",
+        "object" : "menrot_hist_correct",
+        "preview" : 0,
+        "totalObservations" : 54,
+        "variables" : 3
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

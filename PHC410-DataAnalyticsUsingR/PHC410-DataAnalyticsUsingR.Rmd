@@ -1,0 +1,316 @@
+---
+title: "PHARMACEUTICAL BIOSTATISTICS (PHC410)"
+subtitle: "Introduction to Big Data & Data Analytics"
+author: "by Dr Yuslina Zakaria"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(ggplot2)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Pop Quiz
+```{r q1, echo=FALSE}
+quiz(caption="Quiz 1",
+question("8Vs of Big Data include",
+  answer("Veracity", correct=TRUE),
+  answer("Value", correct=TRUE),
+  answer("Viperously"),
+  answer("Virality", correct=TRUE),
+  answer("Videography"),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+)
+)
+```
+
+## Data Visualisation
+<br><br><br>
+
+**Activity: Testing Mental Rotation Ability**
+
+The data used in this exercise are from an experiment in the field of Perception and Recognition.  Shepard and Metzler (1971) demonstrated that when participants are shown two similar three-dimensional shapes, one just a rotated version of the other (see the figure below - top panel), and asked participants whether they were the same shape or not, the reaction time and error rates of responses were a function of rotation; i.e. the larger the difference in rotation between the two shapes, the longer it took participants to say "same"or "different", and the more errors they made.
+
+```{r echo=FALSE, include=FALSE}
+menrot <- read_csv("data/MentalRotationBehavioralData.csv")
+demog <- read_csv("data/demographics.csv")
+```
+
+The experiment was recorded into two sets of data:
+
+First, `demog` - short for demographics. It has three columns:
+
+-  Participant - the ID of the participant
+-  Age - the age of the participant
+-  Sex - the sex of the participant
+
+Secondly, `menrot` - short for mental rotation. It has 8 columns:
+
+-  Participant - the ID of the participant; matches to demog
+-  Trial - the trial number in the experiment for each participant. Each participant underwent **96** trials.
+-  Condition - the name of the image shown; R indicates the rotated image was different
+-  Time - the reaction time to respond on each trial in milliseconds
+-  DesiredResponse - what participants should have responded on each trial; Different or Same
+-  ActualResponse - what participants did respond on each trial; Different or Same.
+-  Angle - the angle that the shape on the right was rotated compared to the shape on the left (0, 50, 100, 150)
+-  CorrectResponse - whether the participant was correct or incorrect on a given trial
+
+***
+
+### Viewing data
+
+Run the R code in the console below to display the structure of demog and menrot:
+
+```{r displaystr, exercise=TRUE}
+str(demog)
+str(menrot)
+```
+
+View the first 5 data of demog. 
+
+```{r headdemog, exercise=TRUE}
+head(demog,n=5)
+```
+
+**Exercise**
+
+Using your own code, view the first 3 data of menrot.
+
+```{r headmenrot, exercise=TRUE}
+
+```
+
+***
+
+### Scatterplots
+
+Scatterplots are a great way of visualising continuous data - data that can take any value on the scale it is measured. 
+
+For example, you can use scatterplots to explore the relationship between two continuous scales such as Age and Reaction Time: Do both variables increase at the same rate? Does one variable increase and the other decrease? Or maybe there is no overall relationship?
+
+
+1. Wrangles the data to create an **average response time** for each participant, `Mean_Time`, and then joins this information to the demographic data, by `Participant`. All this is stored in `menrot_time_age`.
+
+2. Plots a scatterplot (using `geom_point()`) where `Age` is plotted on the x axis, and `Mean_Time` is on the y axis. Use an additional aes (*aesthetic*) call to color by `Sex` which will color each point based on whether it was a male or female participant responding:
+
+```{r wrangle, exercise=TRUE, tidy=TRUE}
+menrot_time_age <- menrot %>% group_by(Participant) %>% summarise(Mean_Time = mean(Time,na.rm = TRUE)) %>% inner_join(demog,"Participant")
+
+#display menrot_time_age
+menrot_time_age
+
+#plots a scatterplot
+ggplot(data=menrot_time_age,mapping=aes(x=Age,y=Mean_Time,color=Sex)) + geom_point()
+```
+
+***
+
+**What Do You Think?**
+
+From the scatterplot,
+
+```{r visquiz, echo=FALSE}
+quiz(caption="Visualisation",
+question("What can you say about the relationship between age and overall response time?",
+  answer("As age increases, overall response time increases."),
+  answer("As age increases, overall response time decreases."),
+  answer("There is no relationship between age and overall response time.", correct = TRUE),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("What can you say about the difference between male and female participants",
+  answer("Males show more of an increase in overall response times with age than females."),
+  answer("Females show more of an increase in overall response times with age than males."),
+  answer("There is no difference between genders in terms of overall response time and age.", correct = TRUE),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+)
+)
+```
+
+***
+
+### Histograms
+
+Histograms are a great way of showing the overall distribution of your data. Is it skewed? Does it look normal? Is it peaky? Is it flat? These are terms that will be familiar to you through the statistics lectures so try to think about them when visualising your data.
+
+Looking at our data, say we wanted to test if the overall distribution of mean response times for correct trials was normally distributed. The code below:
+
+1. Wrangles the data to create an average response time for each participant, `Mean_Time`, and then filters this information for correct trials only. This is then stored in `menrot_hist_correct`
+
+2. Plots a histogram (geom_histogram()) where `Mean_Time` is plotted on the x axis, and the count of each value in `Mean_Time` is plotted on the y axis. The code creates the y axis automatically and we don’t have to state it:
+
+```{r histcorrect, exercise=TRUE, include=FALSE}
+menrot_hist_correct <- menrot %>% filter(CorrectResponse == "Correct") %>% group_by(Participant, CorrectResponse) %>% summarise(Mean_Time = mean(Time, na.rm = TRUE))
+
+ggplot(data = menrot_hist_correct, aes(x = Mean_Time)) + geom_histogram()
+```
+
+**Exercise**
+
+By repeating the above code, plot a histogram of Mean_Time VS Incorrect Trials
+
+*hint : CorrectResponse == "Incorrect"
+
+```{r histincorrect, exercise=TRUE, exercise.lines = 10}
+
+```
+
+***
+
+**What Do You Think?**
+
+From the histogram,
+
+```{r histquiz, echo=FALSE}
+quiz(caption="Visualisation",
+question("What can you say about the overall shape of the distribution?",
+  answer("The data looks reasonable normally distributed.", correct = TRUE),
+  answer("The data looks positively skewed."),
+  answer("The data looks negatively skewed."),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("What is the most common average overall response time for correct trials?",
+  answer("Approximately 2000 milliseconds."),
+  answer("Approximately 2500 milliseconds.",correct = TRUE),
+  answer("Approximately 3000 milliseconds."),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+)
+)
+```
+
+***
+
+### Boxplots
+
+Boxplots are a great means for visualising the **spread** of your data and highlighting **outliers**. When looking at boxplots, you should consider: Whether the box is skewed or not? Whether the median is in the middle or to one side? Are the box whiskers a similar length on both sides? Are there any outliers - usually highlighted as a star or a dot beyond the whiskers?
+
+Looking at our data, lets look at and compare the distributions of mean reaction times for correct and incorrect responses. The code below:
+
+1. Repeats the first two wrangle steps as when we created a scatterplot, but additionally groups by `CorrectResponse`, and stores the data in `menrot_box_correct`.
+
+2. Plots a boxplot (geom_boxplot()) of the overall average response times on the y-axis, `Mean_Time`, split by the condition `CorrectResponse` on the x-axis.
+
+3. Uses an additional aesthetic function (aes) call to fill the colour of the boxplots, of the two categories, based on whether `CorrectResponse` was correct or incorrect:
+
+
+```{r boxplot, exercise=TRUE, include=FALSE}
+menrot_box_correct <- menrot %>% group_by(Participant, CorrectResponse) %>% summarise(Mean_Time = mean(Time, na.rm = TRUE)) %>% inner_join(demog, "Participant")
+
+ggplot(data = menrot_box_correct, 
+       aes(x = CorrectResponse, 
+           y = Mean_Time, 
+           fill = CorrectResponse)) + 
+  geom_boxplot()
+```
+
+***
+
+**What Do You Think?**
+
+From the boxplot,
+
+```{r bpquiz, echo=FALSE}
+quiz(caption="Visualisation",
+question("How many outliers were there?",
+  answer("5"),
+  answer("4"),
+  answer("3"),
+  answer("2"),
+  answer("None", correct=TRUE),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("Which condition had the longer median overall average response time to the mental rotation task",
+  answer("Median response time was longer than for the Correct response."),
+  answer("Median response time was longer than for the Incorrect response.",correct = TRUE),
+  answer("Both medians are the same approximately."),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+)
+)
+```
+
+***
+
+### Barplots
+
+Barplots typically show the **average value of a condition**, e.g. the mean, and the **average spread of values**. When looking at barplots, the main considerations are whether or not there appears to be a difference between the conditions you are interested in or are all conditions about the same? It is worth knowing that barplots are now used less frequently than they were as they actually do not show a lot of information. However, you will still see them in the field so it is good to be able to interpret them.
+
+Looking at our data, let’s say we are interested in whether *there is a difference in the average percentage of correct and incorrect responses across male and female participants*. The code below:
+
+1. Wrangles the data through a series of steps to establish the overall percent average for correct and incorrect responses for both sex, stored in `menrot_resp_sex`.
+
+2. Plots a barplot (geom_bar()) with the condition `Sex` on the x axis, the `Avg_Percent` on the y axis, created through the wrangle, and fill the bars based on `CorrectResponse`.
+
+3. Finally, within the geom_bar it says to treat the data as final values and not to average them, stat = "identity", and makes both columns visible by moving them apart position = position_dodge(.9)) - without this last step the bars would overlap and you wouldn’t see everything. Try changing the .9.
+
+
+```{r barplot, exercise=TRUE, include=FALSE}
+menrot_resp_sex <- menrot %>% count(Participant, CorrectResponse) %>% inner_join(demog, "Participant") %>%
+  mutate(PercentPerParticipant = (n/96)*100) %>%
+  group_by(Sex, CorrectResponse) %>%
+  summarise(Avg_Percent = mean(PercentPerParticipant))
+
+ggplot(data = menrot_resp_sex, 
+       aes(x = Sex, 
+           y = Avg_Percent, 
+           fill = CorrectResponse)) + 
+  geom_bar(stat = "identity", 
+           position = position_dodge(0.9))
+```
+
+***
+
+**What Do You Think?**
+
+From the barplot,
+
+```{r barquiz, echo=FALSE}
+quiz(caption="Visualisation",
+question("On average, which sex had the most correct responses?",
+  answer("Female",correct=TRUE),
+  answer("Male"),
+  answer("Both the same"),
+  answer("Can't tell"),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("On average, which sex had the most incorrect responses?",
+  answer("Female"),
+  answer("Male",correct=TRUE),
+  answer("Both the same"),
+  answer("Can't tell"),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("Looking at the code, what happens if you decrease the position.dodge() value?",
+  answer("The bars get further apart."),
+  answer("The bars start to overlap.",correct=TRUE),
+  answer("Nothing changes in the figure."),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+),
+question("Looking at the code, what happens if you change the aes of `fill` to `color`?",
+  answer("The bars will stay a different color."),
+  answer("The bars become grey and the outlines become different colors.",correct=TRUE),
+  answer("Nothing changes in the figure."),
+  incorrect = "Incorrect.",
+  allow_retry = TRUE
+)
+)
+```
+
+***
+
+### Chapter Complete!
+
+
+## EXPLORATORY DATA ANALYSIS

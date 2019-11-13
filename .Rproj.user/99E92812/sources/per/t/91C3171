@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572888629329.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4218176320",
+    "id" : "91C3171",
+    "lastKnownWriteTime" : 1572888652,
+    "last_content_update" : 1572888652490,
+    "path" : "C:/Users/linaz/Dropbox/Slides/custom.css",
+    "project_path" : "custom.css",
+    "properties" : {
+        "cursorPosition" : "10,1",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "css"
+}

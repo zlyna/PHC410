@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1572889573684.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1352481646",
+    "id" : "354791CC",
+    "lastKnownWriteTime" : 1573661725,
+    "last_content_update" : 1573661725555,
+    "path" : "C:/Users/linaz/Dropbox/Slides/PHC410-BigDataAnalytics-xmr.Rmd",
+    "project_path" : "PHC410-BigDataAnalytics-xmr.Rmd",
+    "properties" : {
+        "cursorPosition" : "965,9",
+        "scrollLine" : "938"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

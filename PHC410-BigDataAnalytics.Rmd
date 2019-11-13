@@ -1,0 +1,28 @@
+---
+title: "PHC410 (PHARMACEUTICAL BIOSTATISTICS) <br>Introduction to Big Data<br>&<br>Data Analytics"
+author: "Dr Yuslina Zakaria"
+date: "November 2019"
+output: 
+  ioslides_presentation:
+    css: style.css
+    logo: logouitm.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Learning Outcomes
+<div class="columns-2">
+  ![](figure/correlationimage.png)
+
+  At the end of this lesson, students should be able to:
+
+1. interpret scatterplots.
+2. differentiate between correlation and regression.
+3. evaluate and interpret the Pearson’s and Spearman’s rank correlation coefficient.
+4. find the equations and explain about the variation of regression lines.
+</div>
+
+
+
